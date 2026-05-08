@@ -117,7 +117,7 @@ export default function TelaLogin() {
             width={512.55} 
             height={1118.5} 
             // absolute posicionado logo abaixo da logo o espaçamento
-            className="absolute top-[220px] left-0"
+            className="absolute top-[280px] left-0"
           />
         </div>
 
