@@ -86,7 +86,7 @@ export default function TelaLogin() {
           
           {/* imagem do logo */}
           <img
-            src="/logo.png"
+            src="/img_login/logo_login.png"
             // compatilibidade  
             alt="logo.io" 
             // dimensoes da imagem
@@ -99,7 +99,7 @@ export default function TelaLogin() {
 
           {/* imagem da pessoa */}
           <img 
-            src="/pessoa.png" 
+            src="/img_login/pessoa_login.png" 
             // acessiblidade
             alt="pessoa.io" 
             // dimensoes da imagem
