@@ -1,10 +1,12 @@
 'use client'
 
-import { ChangeEvent, FormEvent, useState } from 'react';
-import Link from 'next/link'; 
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5"; 
+import Image from 'next/image';
+import React, { useState } from 'react';
+// importei um icone de olho e um icone com olho cortado
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { useRouter } from 'next/navigation';
-import { register } from '@/api/api.js';
+import { toast, Toaster } from 'react-hot-toast';
+import axios from 'axios';
 
 
 export default function TelaFeed() {
@@ -59,5 +61,6 @@ export default function TelaFeed() {
 
           
       </div>
+    </div>
   );
-}
+} 
