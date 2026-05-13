@@ -107,7 +107,7 @@ export default function TelaCadastro() {
 
         {/* PESSOA */}
         <img
-          src="/PESSOA.png"
+          src="/img_cadastro/pessoa_cadastro.png"
           alt="pessoa da stock.io"
           width={497}
           height={1129}
@@ -116,7 +116,7 @@ export default function TelaCadastro() {
 
         {/* LOGO */}
         <img
-          src="/LOGO.png"
+          src="/img_cadastro/logo_cadastro.png"
           alt="logo da stock.io"
           width={421}
           height={267}
