@@ -4,36 +4,15 @@ import Link from 'next/link';
 
 export default function TelaFeed() {
     return (
-      <div className="relative min-h-screen bg-[#F6F3E4]">
 
-        {/* PESSOA */}
-        <img
-          src="/img_cadastro/pessoa_cadastro.png"
-          alt="pessoa da stock.io"
-          width={497}
-          height={1129}
-          className="fixed right-[4.58%] top-[21.68%] w-[25vw] h-auto"
-        />
-
-        {/* LOGO */}
-        <img
-          src="/img_cadastro/logo_cadastro.png"
-          alt="logo da stock.io"
-          width={421}
-          height={267}
-          className="fixed right-[7.29%] top-[3%] w-[18vw] h-auto"
-        />
-
-        
-
-            
-          <div className="fixed left-[30%] right-[30%] top-[20%] bottom-[20%] bg-[#171918] rounded-4xl  items-center pl-[5%] pr-[5%] pt-[3%] pb-[3%] shadow-2xl overflow-y-auto card-scroll">
-            <h2 className="text-7xl">
-              protótipo tela feed
-            </h2>
-            
-            <p className="text-left text-white text-lg font-bold pl-[27%] pt-[10%]">
-              redirecionamento tela login{" "}
+      // div principal da página
+      <div className="relative min-h-screen bg-[#F6F3E4]">  
+          
+        {/* div  para criar o bloco superior*/}
+          <div className="fixed left-[0] right-[0] top-[0] bottom-[50%] bg-[#171918]  items-center pl-[5%] pr-[5%] pt-[3%] pb-[3%] shadow-2xl  ">
+           <div>
+            {/* redirecionamento temporario antes da implementação da nav bar */}
+            <p className="text-left text-white text-lg font-bold pt-5">
               <Link href="/login">
                 <span className="text-[#6A38F3] font-black hover:underline cursor-pointer">
                   login
@@ -41,14 +20,40 @@ export default function TelaFeed() {
               </Link>
             </p>
 
-            <p className="text-left text-white text-lg font-bold pl-[20%] pt-[10%]">
-              redirecionamento tela cadastro{" "}
+            <p className="text-left text-white text-lg font-bold ">
               <Link href="/cadastro">
                 <span className="text-[#6A38F3] font-black hover:underline cursor-pointer">
                   cadastro
                 </span>
               </Link>
             </p>
+           </div>
+           
+           
+          <div className='flex justify-between overflow-hidden '>
+
+            <div>
+              <h2 className="text-5xl font-black">
+              Do CAOS à organização, <br />
+              em alguns cliques
+              </h2>
+            </div>
+          
+            <div>
+              <img
+              src="/img_feed/pessoa_feed.png"
+              alt="pessoa da stock.io"
+              width={497}
+              height={1129}
+              />
+            </div>
+          
+          </div>
+          
+            
+          
+          
+            
 
           </div>
 
