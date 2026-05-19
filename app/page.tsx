@@ -9,7 +9,7 @@ export default function TelaFeed() {
       <div className="relative min-h-screen bg-[#F6F3E4]">  
           
         {/* div  para criar o bloco superior*/}
-          <div className=" flex items-end fixed left-[0] right-[0] top-[0] bottom-[30%] bg-[#171918]  items-center pl-[5%] pr-[5%] pt-[3%] pb-[] shadow-2xl  ">
+          <div className=" flex items-end fixed left-[0] right-[0] top-[0] bottom-[30%] bg-[#000000]  items-center pl-[5%] pr-[5%] pt-[3%] pb-[] shadow-2xl  ">
            <div>
             {/* redirecionamento temporario antes da implementação da nav bar */}
             <p className="text-left text-white text-lg font-bold pt-5">
