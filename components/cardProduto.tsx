@@ -25,7 +25,7 @@ export function CardProduto({produto}: {produto: Produto}){
 
       <div className='h-full'>
       <h3 className='font_bold text-black'>{produto.nome}</h3>
-      <span className='font-bold text-black'>R$ {produto.preco}</span>
+      <span className='font-bold text-black'>R$ {produto.preco}0</span>
       <br />
       <span className='font-bold text-black'>{produto.status}</span>
       </div>
