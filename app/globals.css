@@ -19,6 +19,17 @@
   }
 }
 
+/* definindo classes para esconder a barra de scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* esconde no Chrome, Safari e Opera */
+}
+
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* esconde no Internet Explorer e Edge */
+  scrollbar-width: none;     /* esconde no Firefox */
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
