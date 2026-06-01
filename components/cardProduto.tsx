@@ -13,7 +13,7 @@ export interface Produto {
 
 export function CardProduto({produto}: {produto: Produto}){
     return(
-    <div className='overflow-hidden bg-white rounded-2xl  shadow-sm p-4 h-[310] w-[270]'>
+    <div className='overflow-hidden bg-white rounded-2xl shadow-sm p-4 h-[511] w-full'>
       <div className='h-[70%] w-full'>
         <Link href={'/produto/${produto.id}'}>
         <img src={produto.imagemUrl}
