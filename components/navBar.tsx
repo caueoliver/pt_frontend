@@ -50,14 +50,14 @@ export function NavBar(){
             <div className='flex text-center items-center justify-between '>
 
                 {/* botão de login */}
-                <div className='pr-10'>
+                <div className='font-semibold pr-10'>
                     <Link href="/login">
                     LOGIN
                     </Link>  
                 </div>
 
                 {/* botão de cadastro */}
-                <div className='bg-[#6A38F3] rounded-xl '>
+                <div className='bg-[#6A38F3] font-semibold rounded-xl '>
                     <Link href="/cadastro"
                     className='px-[20]'>
                     CADASTRE-SE
