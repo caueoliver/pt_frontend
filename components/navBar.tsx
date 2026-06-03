@@ -36,12 +36,14 @@ export function NavBar(){
             
 
             <div className='pl-[50] h-[45]'>
+            <Link href="/">
             <img
             
-              src="/img_navBar/logo_navBar1.png"
+              src="/img_navBar/logo_navBar.png"
               alt="logo stock.io"
               className="h-full"/>
-
+            </Link>
+            
             </div>
             
             { !isLogged ? (
@@ -52,16 +54,25 @@ export function NavBar(){
                 {/* botão de login */}
                 <div className='font-semibold pr-10'>
                     <Link href="/login">
+                    <button className="font-bold text-white hover:text-[#6A38F3] active:text-[#6A38F3] 
+                    transition-colors duration-300">
                     LOGIN
-                    </Link>  
+                    </button> 
+                    </Link>
+                    
                 </div>
 
                 {/* botão de cadastro */}
-                <div className='bg-[#6A38F3] font-semibold rounded-xl '>
-                    <Link href="/cadastro"
-                    className='px-[20]'>
+                <div className='font-semibold pr-10'>
+                    <Link href="/cadastro">
+                    <button className="font-bold px-6 py-2 rounded-full bg-[#6A38F3] text-white hover:bg-white hover:text-[#6A38F3] 
+                    active:scale-95 active:bg-gray-200 transition-all duration-300">
                     CADASTRE-SE
+                    </button> 
                     </Link>
+
+                    
+                    
                 </div>
             </div>
 
@@ -74,23 +85,35 @@ export function NavBar(){
 
 
                 {/* botão de perfil */}
-                <div className='pr-10'>
+                <div className='pr-10 pt-2'>
 
                     {/* testa se o usuario está na página de perfil */}
                     {pathname === '/perfil'?(
 
                         // se estiver o icone aparece assim
-                        <Link href="/perfil">
+                        <Link href="/perfil"className=" w-8 h-8">
                             <img src="/img_navBar/perfilRoxo_navBar.png" 
                             alt="perfil" />
                         </Link>
 
                     ):(
                         // se não estiver aparece assim
-                    <Link href="/login">
-                    <img
-                    src="/img_navBar/perfil_navBar.png"
-                    alt='perfil'/>
+                    <Link href="/login" >
+                        <button className="group relative w-8 h-8 active:scale-90 transition-transform">
+                
+                            <img 
+                            src="/img_navBar/perfil_navBar.png" 
+                            alt="Perfil" 
+                            className="absolute object-contain inset-0 w-full h-full transition-opacity duration-300 group-hover:opacity-0"
+                            />
+
+                    
+                            <img 
+                            src="/img_navBar/perfilRoxo_navBar.png" 
+                            alt="Perfil Hover" 
+                            className="absolute object-contain inset-0 w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                            />
+                            </button>
                     </Link> 
                     )
                 }
@@ -99,9 +122,21 @@ export function NavBar(){
                 </div>
 
                 {/* botão de deslogar */}
-                <button onClick={handleLogout} className='w-8 h-8 hover:opacity-80 transition-opacity'>
-                    <img src="/img_navBar/sair_navBar.png" alt="Sair" className="w-full h-full object-contain" /> 
+                <button onClick={handleLogout} className='w-8 h-8 group relative active:scale-90 transition-transform'> 
+                    
+                    <img 
+                    src="/img_navBar/sair_navBar.png" 
+                    alt="Sair" 
+                    className="absolute inset-0 w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-0"
+                    />
+
+                    <img 
+                    src="/img_navBar/sairVermelho_navBar.png" 
+                    alt="Sair " 
+                    className="absolute inset-0 w-full h-full object-contain opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    />
                 </button>
+
             </div>
                 
                 </>
