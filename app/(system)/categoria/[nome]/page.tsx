@@ -4,7 +4,9 @@ import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { CardProduto, Produto } from '@/components/cardProduto';
+import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutos, getLojas } from '@/api/api.js';
+import {Categ_mock, Lojas_mock, Produtos_mock} from '@/mock/mockData'
 
 type Subcategoria = {
   id: number;
@@ -73,6 +75,8 @@ export default function CategoriaEspecifica() {
         setLojas(dataLojas);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
+        setProdutos(Produtos_mock);
+        
       } finally {
         setCarregando(false);
       }
@@ -110,8 +114,8 @@ export default function CategoriaEspecifica() {
   }
 
   // essa funcao roda quando o usuario digita na barra de pesquisa
-  const handleBusca = (e: ChangeEvent<HTMLInputElement>) => {
-    setBusca(e.target.value);
+  const handleBusca = (termo: string) => {
+    setBusca(termo);
     setPaginaAtual(1); // vc volta pra pagina 1 pra nao ficar numa pagina que nao existe mais
   };
 
@@ -144,19 +148,14 @@ export default function CategoriaEspecifica() {
       {/* conteudo principal */}
       <div className="px-40 py-6">
 
-        {/* substituir pelo componente <BarraPesquisa> quando estiver pronto */}
+          {/* barra de pesquisa padronizada */}
         <div className="flex justify-end mb-3">
-          <div className="flex items-center bg-white border border-gray-300 rounded-full px-4 py-2 shadow-sm">
-            <input
-              type="text"
-              placeholder="Procurar por..."
-              value={busca}
-              onChange={handleBusca}
-              className="bg-transparent outline-none text-sm text-gray-600 placeholder-gray-400 w-52"
-            />
-            <span className="text-gray-400 ml-2">🔍</span>
-          </div>
+          <BarraPesquisa 
+            onSearch={handleBusca} 
+            placeholder="Procurar por..." 
+          />
         </div>
+        
 
         {/* filtros de subcategoria e ordenação — alinhados à direita */}
         <div className="flex items-center justify-end mb-6 flex-wrap gap-3">
