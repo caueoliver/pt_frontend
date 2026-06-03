@@ -9,6 +9,7 @@ import { CardLoja, Loja } from '@/components/cardLoja';
 import { CardCategoria, Categoria } from '@/components/cardCategoria';
 import { FiltroLojas } from '@/components/filtroLoja';
 import { BarraPesquisa } from '@/components/barraPesquisa';
+import { getProdutosMaisBaratos, getProdutosRecentes, getProdutosMelhoresAvaliados, getAllProdutos, getAllLojas } from '@/api/api.js';
 
 
 
@@ -25,7 +26,7 @@ const Produtos_mock: Produto[] = [
         { id: 10, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"INDISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
       ];
 
-const LOJAS_MOCK = [
+const Lojas_mock = [
     {id: 1, nome: "CJR", categoria: "mercado", imagemUrl:"/img_feed/CJR.png"},
     {id: 2, nome: "CJR", categoria: "moda", imagemUrl:"/img_feed/CJR.png"},
     {id: 3, nome: "CJR", categoria: "beleza", imagemUrl:"/img_feed/CJR.png"},
@@ -34,7 +35,7 @@ const LOJAS_MOCK = [
     
 ];
 
-const Cat_Mock: Categoria[] = [ 
+const Categ_mock: Categoria[] = [ 
     {id: 1, nome: "Mercado", icone:'null'},
     {id: 2, nome: "Farmácia", icone: 'null'},
     {id: 3, nome: "Beleza", icone: 'null'},
@@ -47,14 +48,61 @@ const Cat_Mock: Categoria[] = [
     ];
 
 export default function TelaFeed() {
-  //estado para guardar produtos
-    const [produtos, setProdutos] = useState(Produtos_mock);
-  //estado para guardar lojas
-    const [lojasExibidas, setLojasExibidas] = useState(LOJAS_MOCK);
-  //estado para guardar categorias
-    const [categorias, setCategorias] = useState(Cat_Mock);
 
-  const [produtosExibidos, setProdutosExibidos] = useState(Produtos_mock);
+  const [maisBaratos, setMaisBaratos] = useState<Produto[]>([]);
+  const [recentes, setRecentes] = useState<Produto[]>([]);
+  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>([]);
+  const [lojas, setLojas] = useState<Loja[]>([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
+
+  useEffect(() => {
+    const buscarProdutos = async () =>{
+      try{
+        const [todosDb, baratosDb, recentesDb, melhoresDb] = await Promise.all([
+          getAllProdutos(),
+          getProdutosMaisBaratos(),
+          getProdutosRecentes(),
+          getProdutosMelhoresAvaliados() 
+        ]);
+
+        setProdutos(todosDb);
+        setMaisBaratos(baratosDb);
+        setRecentes(recentesDb);
+        setMelhoresAvaliados(melhoresDb);
+
+      }catch(error){
+        console.error("Erro ao conectar com o back:",error);
+        setProdutos(Produtos_mock);
+        setMaisBaratos(Produtos_mock);
+        setRecentes(Produtos_mock);
+        setMelhoresAvaliados(Produtos_mock);
+      }
+    };
+    buscarProdutos();
+  }, []);
+
+  useEffect(() => {
+    const buscarLojas = async () =>{
+      try{
+        const[todasDb] = await Promise.all([
+          getAllLojas(),
+        ]);
+
+        setLojas(todasDb);
+      }catch(error){
+        console.error("Erro", error);
+        setLojas(Lojas_mock);
+      }
+    };
+    buscarLojas
+  }, []);
+
+  //estado para guardar lojas
+    const [lojasExibidas, setLojasExibidas] = useState(Lojas_mock);
+  //estado para guardar categorias
+    const [categorias, setCategorias] = useState(Categ_mock);
+
+  const [produtosExibidos, setProdutosExibidos] = useState(produtos);
 
   const [termoBusca, setTermoBusca] = useState('');
 
@@ -66,13 +114,13 @@ const busca = (termo: string) => {
     const termoMin = termo.toLowerCase();
 
     //array que contem todas as lojas compatíveis com o que está sendo digitado
-    const lojasFiltradas = LOJAS_MOCK.filter(loja => 
+    const lojasFiltradas = lojasExibidas.filter(loja => 
       loja.nome.toLowerCase().includes(termoMin)
     );
     setLojasExibidas(lojasFiltradas);
 
     //array que contem todos os produtos compatíveis com o que está sendo digitado
-    const produtosFiltrados = Produtos_mock.filter(produto => 
+    const produtosFiltrados = produtos.filter(produto => 
       produto.nome.toLowerCase().includes(termoMin)
     );
     setProdutosExibidos(produtosFiltrados);
@@ -84,10 +132,10 @@ const busca = (termo: string) => {
   const aplicarFiltroDeLojas = (categoriasMarcadas: string[]) => {
     // se o usuário desmarcou tudo, exibe todas as lojas de novo
     if (categoriasMarcadas.length === 0) {
-      setLojasExibidas(LOJAS_MOCK);
+      setLojasExibidas(Lojas_mock);
     } else {
       // o .filter só deixa passar a loja se a categoria dela estiver dentro da lista de marcadas
-      const lojasFiltradas = LOJAS_MOCK.filter((loja) => 
+      const lojasFiltradas = Lojas_mock.filter((loja) => 
         categoriasMarcadas.includes(loja.categoria)
       );
       setLojasExibidas(lojasFiltradas);
@@ -103,23 +151,22 @@ const busca = (termo: string) => {
       {/* div do banner preto superior */}
     <div className="w-full h-[450px] bg-[#000000] flex items-center justify-between px-[10%] overflow-hidden shrink-0">
         
-        {/* div para separar o texto e a imagem */}
+      {/* div para separar o texto e a imagem */}
       <div className='relative w-full h-full flex justify-between overflow-hidden'>
 
-        {/* texto */}
-        <div className='w-1/2 flex flex-col justify-center'>
-          <h2 className="text-6xl font-black text-white leading-tight">
-            Do CAOS à organização, <br />
-            em alguns cliques 
-          </h2>
+        <div className="w-[60%] text-white flex flex-col justify-center">
+        {/* whitespace-nowrap faz com que não haja quebra de linha */}
+          <h1 className="text-5xl lg:text-6xl text-right font-bold pb-[90] leading-tight tracking-wide whitespace-nowrap">
+          Do CAOS à organização,<br />
+          em alguns cliques
+          </h1>
         </div>
       
-        {/* imagem */}
-        <div className='w-1/2 h-full flex items-end justify-end'>
+        <div className=' h-[full] flex items-end justify-end pr-30'>
           <img
             src="/img_feed/pessoa_feed.png"
             alt="pessoa stock.io"
-            className="h-full object-contain"
+            className=""
           />
         </div>
       
@@ -194,11 +241,15 @@ const busca = (termo: string) => {
             </div>
 
             <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Melhores Avaliados" listaProdutos={Produtos_mock} />
+              <CarrosselProduto titulo="Melhores Avaliados" listaProdutos={melhoresAvaliados} />
             </div>
 
             <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Mais Baratos" listaProdutos={Produtos_mock} />
+              <CarrosselProduto titulo="Mais Baratos" listaProdutos={maisBaratos} />
+            </div>
+
+            <div className='w-full flex flex-col gap-8 py-12'>
+              <CarrosselProduto titulo="Mais recentes" listaProdutos={recentes} />
             </div>
 
            {/* exibe um carrosel generico preenchido as lojas */}

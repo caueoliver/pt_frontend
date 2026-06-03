@@ -41,3 +41,28 @@ export async function deleteUser(userId){
   const res = await api.delete(`/user/delete/${userId}`);
   return res.data;
 }
+
+export async function getProdutosMaisBaratos() {
+  const res = await api.get('/produto/mais-baratos');
+  return res.data;
+}
+
+export async function getProdutosRecentes() {
+  const res = await api.get('/produto/recentes');
+  return res.data;
+}
+
+export async function getProdutosMelhoresAvaliados() {
+  const res = await api.get('/produto/melhores-avaliados');
+  return res.data;
+}
+
+export async function getAllProdutos(){
+  const res = await api.get('/produto/todos')
+  return res.data;
+}
+
+export async function getAllLojas(){
+  const res = await api.get('/loja/todos')
+  return res.data;
+}
