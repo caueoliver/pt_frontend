@@ -78,6 +78,11 @@ export async function getLojaById(lojaId){
   return res.data;
 }
 
+export async function getReviewsByLoja(lojaId){
+  const res = await api.get(`loja/reviews/${lojaId}`)
+  return res.data;
+}
+
 //melhores produtos de determinada loja
 export async function getProdutosMelhoresByLoja(lojaId){
   const res = await api.get(`/produto/melhores-loja/${lojaId}`);
@@ -85,7 +90,7 @@ export async function getProdutosMelhoresByLoja(lojaId){
 }
 
 //todos os produtos de determinada loja
-export async function getAllProdutosByLoja(lojaId){
+export async function getProdutosByLoja(lojaId){
   const res = await api.get('/produto/melhores-by-loja');
   return res.data;
 }

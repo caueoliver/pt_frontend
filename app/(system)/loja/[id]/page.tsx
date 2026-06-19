@@ -2,7 +2,7 @@
 
 import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
-import { getAllProdutosByLoja , getProdutosMelhoresByLoja, getUserById,  getLojaById } from '@/api/api.js';
+import { getProdutosByLoja , getProdutosMelhoresByLoja,  getLojaById, getReviewsByLoja } from '@/api/api.js';
 import { Carrossel } from '@/components/carrossel';
 import { Produtos_mock, reviewsMock } from '@/mock/mockData';
 import { Produto } from '@/interfaces/produtoInterface';
@@ -12,6 +12,7 @@ import { useParams } from 'next/navigation';
 import { CardProduto } from '@/components/cardProduto';
 import { CardComentario } from '@/components/cardComentario';
 import { GridProdutos } from '@/components/gridProdutos';
+import { Review } from '@/interfaces/reviewInterface';
 
 
 
@@ -33,11 +34,12 @@ export default function TelaLoja() {
   //loja a ser exibida
   const[loja, setLoja] = useState<Loja>(lojaMock);
 
-  //guarda o nome do dono
-  const [nomeDono, setNomeDono] = useState<string>("...");
-
+  //pegar produtos melhores avaliados
   const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>(Produtos_mock);
+  //todos os produtos da loja
   const [produtos, setProdutos] = useState<Produto[]>(Produtos_mock);
+  //todas as avaliações da loja
+  const [reviews, setReviews] = useState<Review[]>(reviewsMock);
 
   //verifica se o usuário logado é dono daquela loja
   const [isOwner, setIsOwner] = useState<boolean>(false);
@@ -46,14 +48,16 @@ export default function TelaLoja() {
       //retorna caso n tenha conseguido extrair o id
       if(!id) return;
 
-      const buscarProdutos = async () =>{
+      const buscar = async () =>{
         try{
-          const [todosDb, melhoresDb, lojaDb] = await Promise.all([
-            getAllProdutosByLoja(id),
+          const [todosDb, melhoresDb, lojaDb, reviewsDb] = await Promise.all([
+            getProdutosByLoja(id),
             getProdutosMelhoresByLoja(id),
             getLojaById(id),
+            getReviewsByLoja(id),
           ]);
   
+          setReviews(reviewsDb)
           setLoja(lojaDb);
           setProdutos(todosDb);
           setMelhoresAvaliados(melhoresDb);
@@ -64,10 +68,11 @@ export default function TelaLoja() {
           setLoja(lojaMock);
           setProdutos(Produtos_mock);
           setMelhoresAvaliados(Produtos_mock);
-          setNomeDono("Selena Gomez");
+          setReviews(reviewsMock)
+
         }
       };
-      buscarProdutos();
+      buscar();
     }, [id]);
 
   //função para pegar o id do usuário logado
@@ -106,7 +111,7 @@ export default function TelaLoja() {
 
 
         {/* degrade do fundo */}
-        <div className="absolute inset-0 bg-black/50 bg-gradient-to-b from-black/90 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-black/50 bg-gradient-to-b from-black/100 via-transparent to-transparent"></div>
 
        
         
@@ -146,7 +151,7 @@ export default function TelaLoja() {
 
         <div className="relative z-10 flex flex-col items-center">
           
-          {/* nome da Loja */}
+          {/* nome da loja */}
           <h1 className="text-6xl md:text-8xl font-medium text-white tracking-wide">
             {loja.nome}
           </h1>
@@ -170,9 +175,9 @@ export default function TelaLoja() {
         </div>
 
         {/* link para o perfil do dono da loja*/}
-        <Link href={`/perfil/${lojaMock.idDono}`}>
+        <Link href={`/perfil/${loja.idDono}`}>
         <div className="absolute bottom-8 right-12 z-10 text-white text-lg font-light">
-          by <span className="underline decoration-1 underline-offset-4">{nomeDono}</span>
+          by <span className="underline decoration-1 underline-offset-4">{loja.nomeDono}</span>
         </div>
         </Link>
         
@@ -224,7 +229,7 @@ export default function TelaLoja() {
         {/* carrossel de reviews*/}
         <div className="w-full px-[100] pb-12">
           <Carrossel>
-            {reviewsMock.map((review) => (
+            {reviews.map((review) => (
               <div key={review.id} className="snap-start shrink-0 mr-8">
                 <CardComentario review={review} />
               </div>
@@ -236,11 +241,10 @@ export default function TelaLoja() {
       </section>
 
 
-      <div className='overflow-hidden mx-[100]  '>
+      <div className='overflow-hidden mx-[100] '>
 
-
-            <div className='py-10 flex items-baseline gap-2'>
-            
+          {/* grid com todos os protudos da loja */}
+          <div className='py-10 flex items-baseline gap-2'>
             <span className='text-black text-4xl font-bold'>Produtos</span>
             <span className='text-black text-xl font-medium'>
               de {loja.nome?.toLowerCase()}
