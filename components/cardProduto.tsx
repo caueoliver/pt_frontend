@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export function CardProduto({produto}: {produto: Produto}){
     return(
-    <div className=' object-contain cursor-pointer hover:scale-103 transition-transform overflow-hidden bg-white rounded-2xl shadow-sm p-4 h-[310] w-[240]'>
+    <div className=' object-contain cursor-pointer hover:scale-102 transition-transform overflow-hidden bg-white rounded-4xl p-4 h-[310] w-[240]'>
       <div className='h-[60%]'>
         <Link href={`/produto/${produto.id}`}>
         <img src={produto.imagemUrl}

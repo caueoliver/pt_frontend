@@ -190,7 +190,7 @@ const busca = (termo: string) => {
                   <div className="w-full flex flex-col gap-4">
                     <h3 className="text-black text-4xl font-bold ml-12 mb-4">Produtos Encontrados</h3>
                     <div className="px-12">
-                      <GridProdutos produtos={produtosExibidos} itensPorPagina={10} />
+                      <GridProdutos produtos={produtosExibidos} itensPorPagina={12} />
                     </div>
                   </div>
                 )}

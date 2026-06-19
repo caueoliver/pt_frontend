@@ -9,7 +9,7 @@ interface GridProps {
   itensPorPagina?: number; 
 }
 
-export function GridProdutos({ produtos, itensPorPagina = 10 }: GridProps) {
+export function GridProdutos({ produtos, itensPorPagina = 15 }: GridProps) {
   const [paginaAtual, setPaginaAtual] = useState(1);
 
   // calcula o total de páginas 
@@ -35,7 +35,7 @@ export function GridProdutos({ produtos, itensPorPagina = 10 }: GridProps) {
   return (
     <div className="w-full">
       {/* o grid em si*/}
-      <div className="grid grid-cols-5 gap-10 mb-10">
+      <div className="grid grid-cols-5 gap-6 mb-10">
         {produtosPaginados.map((produto) => (
           <CardProduto key={produto.id} produto={produto} />
         ))}

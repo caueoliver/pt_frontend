@@ -11,6 +11,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useParams } from 'next/navigation';
 import { CardProduto } from '@/components/cardProduto';
 import { CardComentario } from '@/components/cardComentario';
+import { GridProdutos } from '@/components/gridProdutos';
 
 
 
@@ -178,7 +179,7 @@ export default function TelaLoja() {
       </div>
 
         
-      {/* div inferior da pagina   */}
+      {/* div para o carrossel de produtos mais bem avaliados */}
       <div className='overflow-hidden mx-[100]'>
 
 
@@ -233,6 +234,23 @@ export default function TelaLoja() {
         
 
       </section>
+
+
+      <div className='overflow-hidden mx-[100]  '>
+
+
+            <div className='py-10 flex items-baseline gap-2'>
+            
+            <span className='text-black text-4xl font-bold'>Produtos</span>
+            <span className='text-black text-xl font-medium'>
+              de {loja.nome?.toLowerCase()}
+            </span>
+          </div>
+            <GridProdutos produtos={produtos}/>
+
+
+
+      </div>
       
     </div>
       
