@@ -66,3 +66,13 @@ export async function getAllLojas(){
   const res = await api.get('/loja/todos')
   return res.data;
 }
+
+export async function getProdutos() {
+  const res = await api.get('produto');
+  return res.data;
+}
+
+export async function getLojas() {
+  const res = await api.get('loja');
+  return res.data;
+}
