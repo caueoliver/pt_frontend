@@ -25,6 +25,8 @@ export default function TelaFeed() {
 
   const [produtos, setProdutos] = useState<Produto[]>([]);
 
+
+// puxa os produtos pela função da api
   useEffect(() => {
     const buscarProdutos = async () =>{
       try{
@@ -91,7 +93,7 @@ const busca = (termo: string) => {
 
     //array que contem todos os produtos compatíveis com o que está sendo digitado
     const produtosFiltrados = produtos.filter(produto => 
-      produto.nome.toLowerCase().includes(termoMin)
+      produto.name.toLowerCase().includes(termoMin)
     );
     setProdutosExibidos(produtosFiltrados);
   };

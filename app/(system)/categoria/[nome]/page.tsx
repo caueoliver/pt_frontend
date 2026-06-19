@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { CardProduto, Produto } from '@/components/cardProduto';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutos, getLojas } from '@/api/api.js';
-import {Categ_mock, Lojas_mock, Produtos_mock} from '@/mock/mockData'
+import {Categ_mock, Lojas_mock, Produtos_mock} from '@/mock/mockData';
 
 type Subcategoria = {
   id: number;
@@ -88,7 +88,7 @@ export default function CategoriaEspecifica() {
   // filtra por texto digitado
   const produtosFiltrados = produtos.filter((p) => {
     if (busca === "") return true;
-    return p.nome.toLowerCase().includes(busca.toLowerCase());
+    return p.name.toLowerCase().includes(busca.toLowerCase());
   });
 
   // ordena depois de filtrar

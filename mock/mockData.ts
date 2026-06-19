@@ -53,14 +53,14 @@ export const Lojas_mock: Loja [] = [
 ];
 
 export const Produtos_mock: Produto[] = [
-        { id: 1, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"DISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
-        { id: 2, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"DISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
-        { id: 3, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"INDISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
-        { id: 4, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"DISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
-        { id: 5, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"INDISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
-        { id: 6, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"INDISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
-        { id: 7, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"DISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
-        { id: 8, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"INDISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },  
-        { id: 9, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"DISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
-        { id: 10, nome: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, descricao: "brownie foda", status:"INDISPONÍVEL", imagemUrl: "/img_feed/brownie.png" },
+        { id: 1, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
+        { id: 2, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
+        { id: 3, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
+        { id: 4, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
+        { id: 5, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
+        { id: 6, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
+        { id: 7, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
+        { id: 8, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },  
+        { id: 9, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
+        { id: 10, name: "Brownie Meio A.", preco: 7.50, avaliacao: 4.9, description: "brownie foda", estoque: 1, imagemUrl: "/img_feed/brownie.png" },
       ];

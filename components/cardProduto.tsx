@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 export interface Produto {
   id: number;
-  nome: string;
+  name: string;
   preco: number;
   avaliacao: number;
-  descricao: string;
-  status: string;
+  description: string;
+  estoque: number;
   imagemUrl: string;
 }
 
@@ -17,20 +17,20 @@ export function CardProduto({produto}: {produto: Produto}){
       <div className='h-[60%]'>
         <Link href={`/produto/${produto.id}`}>
         <img src={produto.imagemUrl}
-         alt={produto.nome}
+         alt={produto.name}
          className='h-full w-full'/>
         </Link>
         
       </div>
 
       <div className='h-full'>
-        <h3 className='font-bold text-2xl text-black'>{produto.nome}</h3>
+        <h3 className='font-bold text-2xl text-black'>{produto.name}</h3>
         <span className='font-bold text-xl text-black'>R${produto.preco.toFixed(2).replace('.', ',')}</span>
         <br />
-        {produto.status === 'DISPONÍVEL'?(
-          <span className='text-[#C6E700] text-sm font-semibold'>{produto.status}</span>
+        {produto.estoque  === 0?(
+          <span className='text-[#C6E700] text-sm font-semibold'>DISPONÍVEL</span>
           ):(
-          <span className='text-[#AF052A] text-sm font-semibold'>{produto.status}</span>     
+          <span className='text-[#AF052A] text-sm font-semibold'>INDISPONÍVEL</span>     
           )
         }
 
