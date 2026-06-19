@@ -3,14 +3,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { CarrosselProduto } from '@/components/carrosselProduto'; 
-import { CardProduto, Produto } from '@/components/cardProduto';
+import { CardProduto } from '@/components/cardProduto';
 import { CarrosselGenerico } from '@/components/carrossel';
-import { CardLoja, Loja } from '@/components/cardLoja';
+import { CardLoja} from '@/components/cardLoja';
 import { CardCategoria, Categoria } from '@/components/cardCategoria';
 import { FiltroLojas } from '@/components/filtroLoja';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutosMaisBaratos, getProdutosRecentes, getProdutosMelhoresAvaliados, getAllProdutos, getAllLojas } from '@/api/api.js';
 import {Categ_mock, Lojas_mock, Produtos_mock} from '@/mock/mockData'
+import { Produto } from '@/interfaces/produtoInterface';
+import { Loja } from '@/interfaces/lojaInterface';
 
 
 

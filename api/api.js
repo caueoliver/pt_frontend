@@ -42,28 +42,45 @@ export async function deleteUser(userId){
   return res.data;
 }
 
+//produtos mais baratos geral
 export async function getProdutosMaisBaratos() {
   const res = await api.get('/produto/mais-baratos');
   return res.data;
 }
 
+//produtos mais recentes gerais
 export async function getProdutosRecentes() {
   const res = await api.get('/produto/recentes');
   return res.data;
 }
 
+//melhores produtos gerais
 export async function getProdutosMelhoresAvaliados() {
   const res = await api.get('/produto/melhores-avaliados');
   return res.data;
 }
 
+//todos os produtos
 export async function getAllProdutos(){
   const res = await api.get('/produto/todos')
   return res.data;
 }
 
+//todas as lojas
 export async function getAllLojas(){
   const res = await api.get('/loja/todos')
+  return res.data;
+}
+
+//melhores produtos de determinada loja
+export async function getProdutosMelhoresByLoja(lojaId){
+  const res = await api.get('/produto/melhores-by-loja');
+  return res.data;
+}
+
+//todos os produtos de determinada loja
+export async function getAllProdutosByLoja(lojaId){
+  const res = await api.get('/produto/melhores-by-loja');
   return res.data;
 }
 

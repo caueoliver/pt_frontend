@@ -1,15 +1,7 @@
 'use client';
+import { Produto } from '@/interfaces/produtoInterface';
 import Link from 'next/link';
 
-export interface Produto {
-  id: number;
-  name: string;
-  preco: number;
-  avaliacao: number;
-  description: string;
-  estoque: number;
-  imagemUrl: string;
-}
 
 export function CardProduto({produto}: {produto: Produto}){
     return(
@@ -28,9 +20,9 @@ export function CardProduto({produto}: {produto: Produto}){
         <span className='font-bold text-xl text-black'>R${produto.preco.toFixed(2).replace('.', ',')}</span>
         <br />
         {produto.estoque  === 0?(
-          <span className='text-[#C6E700] text-sm font-semibold'>DISPONÍVEL</span>
+          <span className='text-[#AF052A] text-sm font-semibold'>INDISPONÍVEL</span>
           ):(
-          <span className='text-[#AF052A] text-sm font-semibold'>INDISPONÍVEL</span>     
+          <span className='text-[#C6E700] text-sm font-semibold'>DISPONÍVEL</span>     
           )
         }
 
@@ -40,3 +32,5 @@ export function CardProduto({produto}: {produto: Produto}){
     </div>
     );
 }
+
+

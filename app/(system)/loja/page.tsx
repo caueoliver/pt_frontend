@@ -3,22 +3,52 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { CardProduto, Produto } from '@/components/cardProduto';
 import { BarraPesquisa } from '@/components/barraPesquisa';
-import { getProdutos, getLojas } from '@/api/api.js';
+import { getProdutos, getLojas, getAllProdutos, getProdutosMelhoresAvaliados, getProdutosMelhoresByLoja } from '@/api/api.js';
+import { CarrosselProduto } from '@/components/carrosselProduto';
+import { Produtos_mock } from '@/mock/mockData';
+import { Produto } from '@/interfaces/produtoInterface';
+import { Loja } from '@/interfaces/lojaInterface';
 
 
 
 
 export default function TelaLoja() {
-  const lojaMock = {
+  const lojaMock: Loja  = {
+    id: 1,
     nome: "Rare Beauty",
     categoria: "beleza",
     idDono: 1,
-    dono: "Selena Gomez",
+    logoUrl: "/img_loja/rareBeauty_banner.png",
     bannerUrl: "/img_loja/rareBeauty_banner.png", 
     avaliacaoMedia: 5,
   };
+
+
+
+
+  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
+
+  useEffect(() => {
+      const buscarProdutos = async () =>{
+        try{
+          const [todosDb, melhoresDb] = await Promise.all([
+            getAllProdutos(),
+            getProdutosMelhoresByLoja() 
+          ]);
+  
+          setProdutos(todosDb);
+          setMelhoresAvaliados(melhoresDb);
+  
+        }catch(error){
+          console.error("Erro ao conectar com o back:",error);
+          setProdutos(Produtos_mock);
+          setMelhoresAvaliados(Produtos_mock);
+        }
+      };
+      buscarProdutos();
+    }, []);
 
   return (
     // fundo padrão da página 
@@ -65,13 +95,19 @@ export default function TelaLoja() {
         {/* link para o perfil do dono da loja*/}
         <Link href={`perfil/${lojaMock.idDono}`}>
         <div className="absolute bottom-8 right-12 z-10 text-white text-lg font-light">
-          by <span className="underline decoration-1 underline-offset-4">{lojaMock.dono}</span>
+          by <span className="underline decoration-1 underline-offset-4">{}</span>
         </div>
         </Link>
         
       </div>
 
-      
+        
+
+      <div className=' overflow-hidden mx-[100]'>
+        <div className='w-full flex flex-col gap-8 py-12'>
+              <CarrosselProduto titulo="Melhores Avaliados" listaProdutos={melhoresAvaliados} />
+        </div>
+      </div>
       
     </div>
   );
