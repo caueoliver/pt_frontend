@@ -4,7 +4,7 @@ import { Review } from "@/interfaces/reviewInterface";
 
 export function CardComentario({ review }: { review: Review }) {
   return (
-    <div className="bg-[#F6F3E4] rounded-[2rem] p-8 w-[550px] flex gap-6 shrink-0 shadow-lg">
+    <div className="bg-[#F6F3E4] rounded-[2rem] p-8 w-[800px] flex gap-6 shrink-0 shadow-lg">
       
       {/* foto de perfil grande */}
       <img 

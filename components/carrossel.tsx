@@ -2,14 +2,14 @@
 import { ReactNode } from 'react';
 
 // reactNode é qualquer coisa que o React consiga renderizar na tela
-interface CarrosselGenericoProps {
+interface CarrosselProps {
   //as interrogações fazem com que as propriedades não sejam obrigatórias
   titulo?: string;
   subtitulo?: string;
   children: ReactNode; 
 }
 
-export function CarrosselGenerico({ titulo, subtitulo, children }: CarrosselGenericoProps) {
+export function Carrossel({ titulo, subtitulo, children }: CarrosselProps) {
   return (
     <div className='w-full flex flex-col shrink-0'>
       

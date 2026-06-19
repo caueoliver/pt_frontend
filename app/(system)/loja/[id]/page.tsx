@@ -3,13 +3,14 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { getAllProdutosByLoja , getProdutosMelhoresByLoja, getUserById,  getLojaById } from '@/api/api.js';
-import { CarrosselGenerico } from '@/components/carrossel';
-import { Produtos_mock } from '@/mock/mockData';
+import { Carrossel } from '@/components/carrossel';
+import { Produtos_mock, reviewsMock } from '@/mock/mockData';
 import { Produto } from '@/interfaces/produtoInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { jwtDecode } from 'jwt-decode';
 import { useParams } from 'next/navigation';
 import { CardProduto } from '@/components/cardProduto';
+import { CardComentario } from '@/components/cardComentario';
 
 
 
@@ -184,19 +185,57 @@ export default function TelaLoja() {
 
         <div className='w-full flex flex-col gap-8 py-12'>
                     
-          <CarrosselGenerico titulo="Produtos" subtitulo="melhores avaliados">
+          <Carrossel titulo="Produtos" subtitulo="melhores avaliados">
             {melhoresAvaliados.map((produto) => (
               <div key={produto.id} className="snap-start shrink-0">
                 <CardProduto produto={produto} />
               </div>
             ))}
-          </CarrosselGenerico>
+          </Carrossel>
         </div>
 
 
-
       </div>
+
+      <section className="bg-black w-full py-20 flex flex-col items-center">
+        
+        {/* cabeçalho*/}
+        <h2 className="text-white text-4xl font-light mb-4">Reviews e Comentários</h2>
+        
+        {/* nota media */}
+        <span className="text-white text-[5.5rem] leading-none font-medium">
+          {loja?.avaliacaoMedia?.toFixed(2) || "4.75"}
+        </span>
+        
+        {/* estrelas da loja */}
+        <div className="text-yellow-400 text-5xl tracking-widest mt-6 mb-12">
+          {"★".repeat(loja.avaliacaoMedia)}
+          {"☆".repeat(5 - Math.floor(loja.avaliacaoMedia))}
+        </div>
+
+        {/* link ver mais roxo a direita */}
+        <div className="w-full px-[100]  flex justify-end mb-6">
+          <Link href={`/loja/${id}/reviews`} className="text-[#9b72ff] hover:text-[#6A38F3] text-lg font-light transition-colors">
+            ver mais
+          </Link>
+        </div>
+
+        {/* carrossel de reviews*/}
+        <div className="w-full px-[100] pb-12">
+          <Carrossel>
+            {reviewsMock.map((review) => (
+              <div key={review.id} className="snap-start shrink-0 mr-8">
+                <CardComentario review={review} />
+              </div>
+            ))}
+          </Carrossel>
+        </div>
+        
+
+      </section>
       
     </div>
+      
+
   );
 }
