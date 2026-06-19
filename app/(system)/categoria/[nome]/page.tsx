@@ -3,10 +3,11 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { CardProduto, Produto } from '@/components/cardProduto';
+import { CardProduto } from '@/components/cardProduto';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutos, getLojas } from '@/api/api.js';
 import {Categ_mock, Lojas_mock, Produtos_mock} from '@/mock/mockData';
+import { Produto } from '@/interfaces/produtoInterface';
 
 type Subcategoria = {
   id: number;

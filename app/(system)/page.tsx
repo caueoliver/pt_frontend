@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { CarrosselProduto } from '@/components/carrosselProduto'; 
 import { CardProduto } from '@/components/cardProduto';
 import { CarrosselGenerico } from '@/components/carrossel';
 import { CardLoja} from '@/components/cardLoja';
@@ -214,19 +213,44 @@ const busca = (termo: string) => {
               </CarrosselGenerico>
             </div>
 
+
+            {/* carrossel com os produtos mais bem avaliados*/}
             <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Melhores Avaliados" listaProdutos={melhoresAvaliados} />
+            
+              <CarrosselGenerico titulo="Produtos" subtitulo="melhores avaliados">
+                {melhoresAvaliados.map((produto) => (
+                  <div key={produto.id} className="snap-start shrink-0">
+                    <CardProduto produto={produto} />
+                  </div>
+                ))}
+              </CarrosselGenerico>
             </div>
 
+            {/* carrossel com os produtos mais baratos */}
             <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Mais Baratos" listaProdutos={maisBaratos} />
+            
+              <CarrosselGenerico titulo="Produtos" subtitulo="mais baratos">
+                {maisBaratos.map((produto) => (
+                  <div key={produto.id} className="snap-start shrink-0">
+                    <CardProduto produto={produto} />
+                  </div>
+                ))}
+              </CarrosselGenerico>
             </div>
 
+            {/* carrossel com os produtos mais novos */}
             <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Mais recentes" listaProdutos={recentes} />
+            
+              <CarrosselGenerico titulo="Produtos" subtitulo="recém adicionados">
+                {recentes.map((produto) => (
+                  <div key={produto.id} className="snap-start shrink-0">
+                    <CardProduto produto={produto} />
+                  </div>
+                ))}
+              </CarrosselGenerico>
             </div>
 
-           {/* exibe um carrosel generico preenchido as lojas */}
+           {/* exibe um carrossel generico preenchido as lojas */}
             <div className='w-full flex flex-col gap-8 py-12'>
 
                 {/* chama o filtro de lojas */}

@@ -3,11 +3,13 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { getAllProdutosByLoja , getProdutosMelhoresByLoja, getUserById,  getLojaById } from '@/api/api.js';
-import { CarrosselProduto } from '@/components/carrosselProduto';
+import { CarrosselGenerico } from '@/components/carrossel';
 import { Produtos_mock } from '@/mock/mockData';
 import { Produto } from '@/interfaces/produtoInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { jwtDecode } from 'jwt-decode';
+import { useParams } from 'next/navigation';
+import { CardProduto } from '@/components/cardProduto';
 
 
 
@@ -18,11 +20,14 @@ export default function TelaLoja() {
     nome: "Rare Beauty",
     categoria: "beleza",
     idDono: 1,
+    nomeDono: "Selena Gomes",
     logoUrl: "/img_loja/rareBeauty_banner.png",
     bannerUrl: "/img_loja/rareBeauty_banner.png", 
     avaliacaoMedia: 5,
   };
 
+  //puxa o id da loja pela url
+  const { id } = useParams() as { id: string };
   //loja a ser exibida
   const[loja, setLoja] = useState<Loja>(lojaMock);
 
@@ -36,19 +41,21 @@ export default function TelaLoja() {
   const [isOwner, setIsOwner] = useState<boolean>(false);
 
   useEffect(() => {
+      //retorna caso n tenha conseguido extrair o id
+      if(!id) return;
+
       const buscarProdutos = async () =>{
         try{
-          const [todosDb, melhoresDb, lojaDb, donoDb] = await Promise.all([
-            getAllProdutosByLoja(),
-            getProdutosMelhoresByLoja(),
-            getLojaById(),
-            getUserById(lojaMock.idDono)
+          const [todosDb, melhoresDb, lojaDb] = await Promise.all([
+            getAllProdutosByLoja(id),
+            getProdutosMelhoresByLoja(id),
+            getLojaById(id),
           ]);
   
           setLoja(lojaDb);
           setProdutos(todosDb);
           setMelhoresAvaliados(melhoresDb);
-          setNomeDono(donoDb)
+
   
         }catch(error){
           console.error("Erro ao conectar com o back:",error);
@@ -59,7 +66,7 @@ export default function TelaLoja() {
         }
       };
       buscarProdutos();
-    }, []);
+    }, [id]);
 
   //função para pegar o id do usuário logado
   useEffect(() => {
@@ -101,9 +108,11 @@ export default function TelaLoja() {
 
        
         
-          <div className="absolute top-8 right-12 z-20 flex flex-col gap-3">
-            
-            {/* botão de editar loja */}
+         
+
+          { isOwner && (
+             <div className="absolute top-8 right-12 z-20 flex flex-col gap-3">
+               {/* botão de editar loja */}
             <button 
               onClick={() => console.log("teste")}
               className="w-10 h-10 bg-[#6A38F3] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
@@ -115,7 +124,7 @@ export default function TelaLoja() {
               />
             </button>
 
-            {/* Botão de Adicionar Produto */}
+            {/* botão de adicionar produto */}
             <button 
               onClick={() => console.log("Adicionar produto clicado!")}
               className="w-10 h-10 bg-[#6A38F3] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
@@ -128,7 +137,9 @@ export default function TelaLoja() {
               />
             </button>
 
-          </div>
+          </div>   
+          )} 
+           
       
 
         <div className="relative z-10 flex flex-col items-center">
@@ -166,11 +177,24 @@ export default function TelaLoja() {
       </div>
 
         
-
+      {/* div inferior da pagina   */}
       <div className='overflow-hidden mx-[100]'>
+
+
+
         <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Melhores Avaliados" listaProdutos={melhoresAvaliados} />
+                    
+          <CarrosselGenerico titulo="Produtos" subtitulo="melhores avaliados">
+            {melhoresAvaliados.map((produto) => (
+              <div key={produto.id} className="snap-start shrink-0">
+                <CardProduto produto={produto} />
+              </div>
+            ))}
+          </CarrosselGenerico>
         </div>
+
+
+
       </div>
       
     </div>
