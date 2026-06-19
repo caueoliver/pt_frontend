@@ -2,13 +2,12 @@
 
 import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { BarraPesquisa } from '@/components/barraPesquisa';
-import { getProdutos, getLojas, getAllProdutos, getProdutosMelhoresAvaliados, getProdutosMelhoresByLoja } from '@/api/api.js';
+import { getAllProdutosByLoja , getProdutosMelhoresByLoja, getUserById,  getLojaById } from '@/api/api.js';
 import { CarrosselProduto } from '@/components/carrosselProduto';
 import { Produtos_mock } from '@/mock/mockData';
 import { Produto } from '@/interfaces/produtoInterface';
 import { Loja } from '@/interfaces/lojaInterface';
+import { jwtDecode } from 'jwt-decode';
 
 
 
@@ -24,31 +23,64 @@ export default function TelaLoja() {
     avaliacaoMedia: 5,
   };
 
+  //loja a ser exibida
+  const[loja, setLoja] = useState<Loja>(lojaMock);
 
+  //guarda o nome do dono
+  const [nomeDono, setNomeDono] = useState<string>("...");
 
+  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>(Produtos_mock);
+  const [produtos, setProdutos] = useState<Produto[]>(Produtos_mock);
 
-  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>([]);
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  //verifica se o usuário logado é dono daquela loja
+  const [isOwner, setIsOwner] = useState<boolean>(false);
 
   useEffect(() => {
       const buscarProdutos = async () =>{
         try{
-          const [todosDb, melhoresDb] = await Promise.all([
-            getAllProdutos(),
-            getProdutosMelhoresByLoja() 
+          const [todosDb, melhoresDb, lojaDb, donoDb] = await Promise.all([
+            getAllProdutosByLoja(),
+            getProdutosMelhoresByLoja(),
+            getLojaById(),
+            getUserById(lojaMock.idDono)
           ]);
   
+          setLoja(lojaDb);
           setProdutos(todosDb);
           setMelhoresAvaliados(melhoresDb);
+          setNomeDono(donoDb)
   
         }catch(error){
           console.error("Erro ao conectar com o back:",error);
+          setLoja(lojaMock);
           setProdutos(Produtos_mock);
           setMelhoresAvaliados(Produtos_mock);
+          setNomeDono("Selena Gomez");
         }
       };
       buscarProdutos();
     }, []);
+
+  //função para pegar o id do usuário logado
+  useEffect(() => {
+    const token = localStorage.getItem('token'); 
+
+    if (token) {
+      
+        //descriptografa o token 
+        const payloadDecodificado = jwtDecode(token) as any; 
+        //cria uma variavel de usuário logado com o payload "traduzido"
+        const loggedUserId = payloadDecodificado.sub || payloadDecodificado.id;
+
+        //testa se existe um usuário logado e se id bate com o do dono da loja
+        if (loggedUserId && Number(loggedUserId) === loja.idDono) {
+          setIsOwner(true);
+        } else {
+          setIsOwner(false);
+        }
+
+    }
+  }, [loja.idDono]);
 
   return (
     // fundo padrão da página 
@@ -58,8 +90,8 @@ export default function TelaLoja() {
         
         {/* banner*/}
         <img 
-          src={lojaMock.bannerUrl} 
-          alt={`Banner da loja ${lojaMock.nome}`}
+          src={loja.bannerUrl} 
+          alt={`Banner da loja ${loja.nome}`}
           className="absolute inset-0 w-full h-full object-cover"
         />
 
@@ -67,35 +99,67 @@ export default function TelaLoja() {
         {/* degrade do fundo */}
         <div className="absolute inset-0 bg-black/50 bg-gradient-to-b from-black/90 via-transparent to-transparent"></div>
 
+       
+        
+          <div className="absolute top-8 right-12 z-20 flex flex-col gap-3">
+            
+            {/* botão de editar loja */}
+            <button 
+              onClick={() => console.log("teste")}
+              className="w-10 h-10 bg-[#6A38F3] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
+            >
+              <img 
+                src="/img_loja/icone_editar.png" 
+                alt="Editar Loja" 
+                className="w-5 h-5 object-contain" 
+              />
+            </button>
+
+            {/* Botão de Adicionar Produto */}
+            <button 
+              onClick={() => console.log("Adicionar produto clicado!")}
+              className="w-10 h-10 bg-[#6A38F3] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
+              title="Adicionar Produto"
+            >
+              <img 
+                src="/img_loja/icone_add.png" 
+                alt="Adicionar Produto" 
+                className="w-5 h-5 object-contain" 
+              />
+            </button>
+
+          </div>
+      
+
         <div className="relative z-10 flex flex-col items-center">
           
           {/* nome da Loja */}
           <h1 className="text-6xl md:text-8xl font-medium text-white tracking-wide">
-            {lojaMock.nome}
+            {loja.nome}
           </h1>
 
           {/* categoria e estrelas */}
           <div className="w-full flex justify-between items-center mt-2 px-2">
             
-            {/* Categoria */}
+            {/* categoria */}
             <span className="text-2xl text-gray-200 font-light lowercase">
-              {lojaMock.categoria}
+              {loja.categoria}
             </span>
 
             {/* coloca a quantidade de estrelas relativa a média da loja*/}
             <div className="flex gap-1 text-yellow-400 text-3xl">
-              {"★".repeat(lojaMock.avaliacaoMedia)}
+              {"★".repeat(loja.avaliacaoMedia)}
               {/* subtrai a media de estrelas de 5 e prenche o restante com um outro icone */}
-              {"☆".repeat(5 - Math.floor(lojaMock.avaliacaoMedia))}
+              {"☆".repeat(5 - Math.floor(loja.avaliacaoMedia))}
             </div>
 
           </div>
         </div>
 
         {/* link para o perfil do dono da loja*/}
-        <Link href={`perfil/${lojaMock.idDono}`}>
+        <Link href={`/perfil/${lojaMock.idDono}`}>
         <div className="absolute bottom-8 right-12 z-10 text-white text-lg font-light">
-          by <span className="underline decoration-1 underline-offset-4">{}</span>
+          by <span className="underline decoration-1 underline-offset-4">{nomeDono}</span>
         </div>
         </Link>
         
@@ -103,7 +167,7 @@ export default function TelaLoja() {
 
         
 
-      <div className=' overflow-hidden mx-[100]'>
+      <div className='overflow-hidden mx-[100]'>
         <div className='w-full flex flex-col gap-8 py-12'>
               <CarrosselProduto titulo="Melhores Avaliados" listaProdutos={melhoresAvaliados} />
         </div>
