@@ -4,7 +4,7 @@ import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { getProdutosByLoja , getProdutosMelhoresByLoja,  getLojaById, getReviewsByLoja } from '@/api/api.js';
 import { Carrossel } from '@/components/carrossel';
-import { Produtos_mock, reviewsMock } from '@/mock/mockData';
+import { produtosMock, reviewsMock } from '@/mock/mockData';
 import { Produto } from '@/interfaces/produtoInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { jwtDecode } from 'jwt-decode';
@@ -35,9 +35,9 @@ export default function TelaLoja() {
   const[loja, setLoja] = useState<Loja>(lojaMock);
 
   //pegar produtos melhores avaliados
-  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>(Produtos_mock);
+  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>(produtosMock);
   //todos os produtos da loja
-  const [produtos, setProdutos] = useState<Produto[]>(Produtos_mock);
+  const [produtos, setProdutos] = useState<Produto[]>(produtosMock);
   //todas as avaliações da loja
   const [reviews, setReviews] = useState<Review[]>(reviewsMock);
 
@@ -66,8 +66,8 @@ export default function TelaLoja() {
         }catch(error){
           console.error("Erro ao conectar com o back:",error);
           setLoja(lojaMock);
-          setProdutos(Produtos_mock);
-          setMelhoresAvaliados(Produtos_mock);
+          setProdutos(produtosMock);
+          setMelhoresAvaliados(produtosMock);
           setReviews(reviewsMock)
 
         }

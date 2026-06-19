@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { CardProduto } from '@/components/cardProduto';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutos, getLojas } from '@/api/api.js';
-import {Categ_mock, Lojas_mock, Produtos_mock} from '@/mock/mockData';
+import {categMock, lojasMock, produtosMock} from '@/mock/mockData';
 import { Produto } from '@/interfaces/produtoInterface';
 
 type Subcategoria = {
@@ -76,7 +76,7 @@ export default function CategoriaEspecifica() {
         setLojas(dataLojas);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
-        setProdutos(Produtos_mock);
+        setProdutos(produtosMock);
         
       } finally {
         setCarregando(false);

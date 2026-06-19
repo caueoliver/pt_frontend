@@ -49,7 +49,7 @@ export const reviewsMock: Review[] = [
     }
   ];
 
-export const Categ_mock: Categoria[] = [ 
+export const categMock: Categoria[] = [ 
     {id: 1, nome: "Mercado", icone:'null'},
     {id: 2, nome: "Farmácia", icone: 'null'},
     {id: 3, nome: "Beleza", icone: 'null'},
@@ -61,7 +61,7 @@ export const Categ_mock: Categoria[] = [
 
     ];
 
-export const Lojas_mock: Loja [] = [
+export const lojasMock: Loja [] = [
     {id: 1, nome: "CJR", categoria: "mercado",idDono: 1, nomeDono: "Selena Gomes", logoUrl:"/img_feed/CJR.png", bannerUrl: "/img_loja/rareBeauty_banner.png", avaliacaoMedia: 5,},
     {id: 2, nome: "CJR", categoria: "moda",idDono: 1,nomeDono: "Selena Gomes", logoUrl:"/img_feed/CJR.png", bannerUrl: "/img_loja/rareBeauty_banner.png", avaliacaoMedia: 5,},
     {id: 3, nome: "CJR", categoria: "beleza",idDono: 1,nomeDono: "Selena Gomes", logoUrl:"/img_feed/CJR.png", bannerUrl: "/img_loja/rareBeauty_banner.png", avaliacaoMedia: 5,},
@@ -70,7 +70,7 @@ export const Lojas_mock: Loja [] = [
     
 ];
 
-export const Produtos_mock: Produto[] = [
+export const produtosMock: Produto[] = [
         { id: 1, name: "Brownie Meio A.", preco: 7.50, idLoja: 1, avaliacao: 4.9, description: "brownie foda", estoque: 2, imagemUrl: "/img_feed/brownie.png" },
         { id: 2, name: "Brownie Meio A.", preco: 7.50, idLoja: 1, avaliacao: 4.9, description: "brownie foda", estoque: 0, imagemUrl: "/img_feed/brownie.png" },
         { id: 3, name: "Brownie Meio A.", preco: 7.50, idLoja: 1, avaliacao: 4.9, description: "brownie foda", estoque: 6, imagemUrl: "/img_feed/brownie.png" },
