@@ -13,6 +13,8 @@ import { CardProduto } from '@/components/cardProduto';
 import { CardComentario } from '@/components/cardComentario';
 import { GridProdutos } from '@/components/gridProdutos';
 import { Review } from '@/interfaces/reviewInterface';
+import { ModalEditarLoja } from '@/components/modais/modalEditarLoja';
+
 
 
 
@@ -43,6 +45,9 @@ export default function TelaLoja() {
 
   //verifica se o usuário logado é dono daquela loja
   const [isOwner, setIsOwner] = useState<boolean>(false);
+
+  //exibe ou não o modal
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
 
   useEffect(() => {
       //retorna caso n tenha conseguido extrair o id
@@ -117,11 +122,11 @@ export default function TelaLoja() {
         
          
 
-          { isOwner && (
+          {/* { isOwner && ( */}
              <div className="absolute top-8 right-12 z-20 flex flex-col gap-3">
                {/* botão de editar loja */}
             <button 
-              onClick={() => console.log("teste")}
+              onClick={() => setIsModalEditOpen(true)}
               className="w-10 h-10 bg-[#6A38F3] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
             >
               <img 
@@ -145,7 +150,7 @@ export default function TelaLoja() {
             </button>
 
           </div>   
-          )} 
+          {/* )}  */}
            
       
 
@@ -254,7 +259,15 @@ export default function TelaLoja() {
 
 
 
+           
       </div>
+      
+            <ModalEditarLoja 
+        isOpen={isModalEditOpen} 
+        onClose={() => setIsModalEditOpen(false)} 
+        loja={loja} 
+      />
+      
       
     </div>
       
