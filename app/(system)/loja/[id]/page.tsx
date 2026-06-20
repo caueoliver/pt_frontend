@@ -13,7 +13,7 @@ import { CardProduto } from '@/components/cardProduto';
 import { CardComentario } from '@/components/cardComentario';
 import { GridProdutos } from '@/components/gridProdutos';
 import { Review } from '@/interfaces/reviewInterface';
-import { ModalEditarLoja } from '@/components/modais/modalEditarLoja';
+import { ModalEditarLoja } from '@/app/(system)/loja/[id]/modais/modalEditarLoja';
 
 
 

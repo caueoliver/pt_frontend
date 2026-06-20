@@ -106,7 +106,7 @@ export function ModalEditarLoja({ isOpen, onClose, loja }: ModalEditarLojaProps)
   );
 }
 
-// componente auxiliar
+//componente auxiliar
 function UploadBox({ label }: { label: string }) {
   return (
     <label className="border-[1.5px] border-dashed border-[#6A38F3] rounded-2xl flex flex-col items-center justify-center py-5 cursor-pointer hover:bg-purple-50/50 transition-colors">

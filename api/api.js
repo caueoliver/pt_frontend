@@ -42,7 +42,7 @@ export async function deleteUser(userId){
   return res.data;
 }
 
-//produtos mais baratos geral
+//produtos mais baratos gerais
 export async function getProdutosMaisBaratos() {
   const res = await api.get('/produto/mais-baratos');
   return res.data;
@@ -77,7 +77,7 @@ export async function getLojaById(lojaId){
   const res = await api.get(`loja/${lojaId}`)
   return res.data;
 }
-
+//reviews pelo id da loja
 export async function getReviewsByLoja(lojaId){
   const res = await api.get(`loja/reviews/${lojaId}`)
   return res.data;
