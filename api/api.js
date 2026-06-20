@@ -7,6 +7,12 @@ const api = axios.create({
   },
 })
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
 export async function login(email, password) {
   const res = await api.post('user/login', { email, password });
   return res.data;
@@ -62,13 +68,45 @@ export async function getProdutosMelhoresAvaliados() {
 
 //todos os produtos
 export async function getAllProdutos(){
-  const res = await api.get('/produto/todos')
+  const res = await api.get('/produto')
   return res.data;
 }
 
 //todas as lojas
 export async function getAllLojas(){
-  const res = await api.get('/loja/todos')
+  const res = await api.get('/loja')
+  return res.data;
+}
+
+export async function getAvaliacoesLoja() {
+  const res = await api.get('avaliacoes-loja');
+  return res.data;
+}
+
+export async function editarAvaliacao(id, nota, comentario) {
+  const res = await api.patch(`avaliacoes-loja/${id}`, { nota, comentario });
+  return res.data;
+}
+
+export async function deletarAvaliacao(id) {
+  const res = await api.delete(`avaliacoes-loja/${id}`);
+  return res.data;
+}
+
+export async function criarComentario(avaliacaoLojaId, conteudo) {
+  const token = localStorage.getItem('token');
+  const usuarioId = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
+  const res = await api.post('comentarios-avaliacao', { usuarioId, avaliacaoLojaId, conteudo });
+  return res.data;
+}
+
+export async function editarComentario(id, conteudo) {
+  const res = await api.patch(`comentarios-avaliacao/${id}`, { conteudo });
+  return res.data;
+}
+
+export async function deletarComentario(id) {
+  const res = await api.delete(`comentarios-avaliacao/${id}`);
   return res.data;
 }
 
@@ -102,5 +140,10 @@ export async function getProdutos() {
 
 export async function getLojas() {
   const res = await api.get('loja');
+  return res.data;
+}
+
+export async function getAvaliacoesProduto(productId) {
+  const res = await api.get(`/avaliacaoproduto/produto/${productId}`);
   return res.data;
 }
