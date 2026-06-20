@@ -2,15 +2,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { CarrosselProduto } from '@/components/carrosselProduto'; 
-import { CardProduto, Produto } from '@/components/cardProduto';
-import { CarrosselGenerico } from '@/components/carrossel';
-import { CardLoja, Loja } from '@/components/cardLoja';
+import { CardProduto } from '@/components/cardProduto';
+import { Carrossel } from '@/components/carrossel';
+import { CardLoja} from '@/components/cardLoja';
 import { CardCategoria, Categoria } from '@/components/cardCategoria';
 import { FiltroLojas } from '@/components/filtroLoja';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutosMaisBaratos, getProdutosRecentes, getProdutosMelhoresAvaliados, getAllProdutos, getAllLojas } from '@/api/api.js';
 import {Categ_mock, Lojas_mock, Produtos_mock} from '@/mock/mockData'
+import { Produto } from '@/interfaces/produtoInterface';
+import { Loja } from '@/interfaces/lojaInterface';
+import { GridProdutos } from '@/components/gridProdutos';
 
 
 
@@ -25,6 +27,8 @@ export default function TelaFeed() {
 
   const [produtos, setProdutos] = useState<Produto[]>([]);
 
+
+// puxa os produtos pela função da api
   useEffect(() => {
     const buscarProdutos = async () =>{
       try{
@@ -91,7 +95,7 @@ const busca = (termo: string) => {
 
     //array que contem todos os produtos compatíveis com o que está sendo digitado
     const produtosFiltrados = produtos.filter(produto => 
-      produto.nome.toLowerCase().includes(termoMin)
+      produto.name.toLowerCase().includes(termoMin)
     );
     setProdutosExibidos(produtosFiltrados);
   };
@@ -173,23 +177,22 @@ const busca = (termo: string) => {
               <>
               {/* testa se tem lojas compativeis e exibe elas*/}
                 {lojasExibidas.length > 0 && (
-                  <CarrosselGenerico titulo="Lojas Encontradas">
+                  <Carrossel titulo="Lojas Encontradas">
                     {lojasExibidas.map((loja) => (
                       <div key={loja.id} className="snap-start shrink-0">
                         <CardLoja loja={loja} />
                       </div>
                     ))}
-                  </CarrosselGenerico>
+                  </Carrossel>
                 )}
                 {/* testa se tem produtos compativeis e exibe eles */}
                 {produtosExibidos.length > 0 && (
-                  <CarrosselGenerico titulo="Produtos Encontrados">
-                    {produtosExibidos.map((produto) => (
-                      <div key={produto.id} className="snap-start shrink-0">
-                        <CardProduto produto={produto} />
-                      </div>
-                    ))}
-                  </CarrosselGenerico>
+                  <div className="w-full flex flex-col gap-4">
+                    <h3 className="text-black text-4xl font-bold ml-12 mb-4">Produtos Encontrados</h3>
+                    <div className="px-12">
+                      <GridProdutos produtos={produtosExibidos} itensPorPagina={12} />
+                    </div>
+                  </div>
                 )}
               </>
             )}
@@ -201,28 +204,53 @@ const busca = (termo: string) => {
           <div className="w-full flex flex-col animate-in fade-in duration-300">
             
             <div className='w-full flex flex-col gap-8 py-4'>
-              <CarrosselGenerico titulo="Categorias">
+              <Carrossel titulo="Categorias">
                 {categorias.map((categoria) => (
                   <div key={categoria.id} className="snap-start shrink-0">
                     <CardCategoria categoria={categoria} />
                   </div>
                 ))}
-              </CarrosselGenerico>
+              </Carrossel>
             </div>
 
+
+            {/* carrossel com os produtos mais bem avaliados*/}
             <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Melhores Avaliados" listaProdutos={melhoresAvaliados} />
+            
+              <Carrossel titulo="Produtos" subtitulo="melhores avaliados">
+                {melhoresAvaliados.map((produto) => (
+                  <div key={produto.id} className="snap-start shrink-0">
+                    <CardProduto produto={produto} />
+                  </div>
+                ))}
+              </Carrossel>
             </div>
 
+            {/* carrossel com os produtos mais baratos */}
             <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Mais Baratos" listaProdutos={maisBaratos} />
+            
+              <Carrossel titulo="Produtos" subtitulo="mais baratos">
+                {maisBaratos.map((produto) => (
+                  <div key={produto.id} className="snap-start shrink-0">
+                    <CardProduto produto={produto} />
+                  </div>
+                ))}
+              </Carrossel>
             </div>
 
+            {/* carrossel com os produtos mais novos */}
             <div className='w-full flex flex-col gap-8 py-12'>
-              <CarrosselProduto titulo="Mais recentes" listaProdutos={recentes} />
+            
+              <Carrossel titulo="Produtos" subtitulo="recém adicionados">
+                {recentes.map((produto) => (
+                  <div key={produto.id} className="snap-start shrink-0">
+                    <CardProduto produto={produto} />
+                  </div>
+                ))}
+              </Carrossel>
             </div>
 
-           {/* exibe um carrosel generico preenchido as lojas */}
+           {/* exibe um carrossel generico preenchido as lojas */}
             <div className='w-full flex flex-col gap-8 py-12'>
 
                 {/* chama o filtro de lojas */}
@@ -231,13 +259,13 @@ const busca = (termo: string) => {
               </div>
               
 
-              <CarrosselGenerico titulo="Lojas">
+              <Carrossel titulo="Lojas">
                 {lojasExibidas.map((loja) => (
                   <div key={loja.id} className="snap-start shrink-0">
                     <CardLoja loja={loja} />
                   </div>
                 ))}
-              </CarrosselGenerico>
+              </Carrossel>
 
             </div>
 

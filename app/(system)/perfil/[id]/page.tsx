@@ -19,8 +19,8 @@ interface Review {
   comment: string;
 
   user: {
-    name: string;
-    avatarUrl: string;
+  name: string;
+  avatarUrl: string;
   };
 }
 
@@ -285,7 +285,7 @@ export default function Profile() {
                 className="w-[120px] h-[120px] rounded-full object-cover"
                 />
 
-              {/* NOme do usuario e seus comentarios */}
+              {/* Nome do usuario e seus comentarios */}
               <div>
 
                 <h3 className="text-3xl font-semibold">
