@@ -26,7 +26,7 @@ export function Carrossel({ titulo, subtitulo, children }: CarrosselProps) {
       )}
 
       {/* A área de rolagem dos cards */}
-      <div className="w-full flex gap-10 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+      <div className="w-full flex gap-15 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
         {children}
       </div>
 

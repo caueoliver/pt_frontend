@@ -42,7 +42,7 @@ export function CardCategoria({categoria}:{categoria: Categoria}){
     
     
     return(
-        <div className='mt-[10] overflow-hidden flex flex-col items-center bg-white rounded-4xl h-[130] w-[130] cursor-pointer hover:scale-105 transition-transform'>
+        <div className='mt-[10] mx-[10] verflow-hidden flex flex-col items-center bg-white rounded-4xl h-[145] w-[145] cursor-pointer hover:scale-105 transition-transform'>
       <div className='h-[60%] mt-[30] w-full flex items-end justify-center'>
         <Link href={`/categoria/${categoria.nome.toLowerCase()}`} className='h-full flex justify-center'>
         <img src={categoria.icone}

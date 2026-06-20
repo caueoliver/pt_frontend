@@ -123,24 +123,24 @@ const busca = (termo: string) => {
   <div className="w-full min-h-screen bg-[#F6F3E4] flex flex-col">
 
       {/* div do banner preto superior */}
-    <div className="w-full h-[450px] bg-[#000000] flex items-center justify-between px-[10%] overflow-hidden shrink-0">
+    <div className="w-full h-[450px] bg-[#000000] flex justify-between px-[10%] shrink-0">
 
       {/* div para separar o texto e a imagem */}
-      <div className='relative w-full h-full flex justify-between overflow-hidden'>
+      <div className='relative w-full h-full flex justify-between'>
 
         <div className="w-[60%] text-white flex flex-col justify-center">
         {/* whitespace-nowrap faz com que não haja quebra de linha */}
-          <h1 className="text-5xl lg:text-6xl text-right font-bold pb-[90] leading-tight tracking-wide whitespace-nowrap">
+          <h1 className="text-5xl lg:text-6xl text-right font-bold pb-[90px] leading-tight tracking-wide whitespace-nowrap">
           Do CAOS à organização,<br />
           em alguns cliques
           </h1>
         </div>
 
-        <div className=' h-[full] flex items-end justify-end pr-30'>
+        <div className='h-full flex items-end justify-end pr-20'>
           <img
             src="/img_feed/pessoa_feed.png"
             alt="pessoa stock.io"
-            className=""
+            className="h-full w-auto object-contain object-bottom"
           />
         </div>
 
