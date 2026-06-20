@@ -109,24 +109,24 @@ export default function TelaFeed() {
 //função para buscar utilizando a barra de pesquisa
 const busca = (termo: string) => {
     // guarda a palavra digitada
-    setTermoBusca(termo); 
+    setTermoBusca(termo);
     //converte pra letra minuscula pra evitar conflito
     const termoMin = termo.toLowerCase();
 
     //array que contem todas as lojas compatíveis com o que está sendo digitado
-    const lojasFiltradas = lojasExibidas.filter(loja => 
+    const lojasFiltradas = lojasExibidas.filter(loja =>
       loja.nome.toLowerCase().includes(termoMin)
     );
     setLojasExibidas(lojasFiltradas);
 
     //array que contem todos os produtos compatíveis com o que está sendo digitado
-    const produtosFiltrados = produtos.filter(produto => 
+    const produtosFiltrados = produtos.filter(produto =>
       produto.nome.toLowerCase().includes(termoMin)
     );
     setProdutosExibidos(produtosFiltrados);
   };
 
-  
+
 
   //função para o filtro de loja por categoria
   const aplicarFiltroDeLojas = (categoriasMarcadas: string[]) => {
@@ -135,7 +135,7 @@ const busca = (termo: string) => {
       setLojasExibidas(Lojas_mock);
     } else {
       // o .filter só deixa passar a loja se a categoria dela estiver dentro da lista de marcadas
-      const lojasFiltradas = Lojas_mock.filter((loja) => 
+      const lojasFiltradas = Lojas_mock.filter((loja) =>
         categoriasMarcadas.includes(loja.categoria)
       );
       setLojasExibidas(lojasFiltradas);
@@ -144,13 +144,13 @@ const busca = (termo: string) => {
 
 
   return (
-    
+
   // div principal da pag
-  <div className="w-full min-h-screen bg-[#F6F3E4] flex flex-col">  
-      
+  <div className="w-full min-h-screen bg-[#F6F3E4] flex flex-col">
+
       {/* div do banner preto superior */}
     <div className="w-full h-[450px] bg-[#000000] flex items-center justify-between px-[10%] overflow-hidden shrink-0">
-        
+
       {/* div para separar o texto e a imagem */}
       <div className='relative w-full h-full flex justify-between overflow-hidden'>
 
@@ -161,7 +161,7 @@ const busca = (termo: string) => {
           em alguns cliques
           </h1>
         </div>
-      
+
         <div className=' h-[full] flex items-end justify-end pr-30'>
           <img
             src="/img_feed/pessoa_feed.png"
@@ -169,7 +169,7 @@ const busca = (termo: string) => {
             className=""
           />
         </div>
-      
+
       </div>
     </div>
     
