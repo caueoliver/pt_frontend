@@ -4,7 +4,7 @@ import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { getProdutosByLoja , getProdutosMelhoresByLoja,  getLojaById, getReviewsByLoja } from '@/api/api.js';
 import { Carrossel } from '@/components/carrossel';
-import { Produtos_mock, reviewsMock } from '@/mock/mockData';
+import { produtosMock, reviewsMock } from '@/mock/mockData';
 import { Produto } from '@/interfaces/produtoInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { jwtDecode } from 'jwt-decode';
@@ -13,6 +13,8 @@ import { CardProduto } from '@/components/cardProduto';
 import { CardComentario } from '@/components/cardComentario';
 import { GridProdutos } from '@/components/gridProdutos';
 import { Review } from '@/interfaces/reviewInterface';
+import { ModalEditarLoja } from '@/app/(system)/loja/[id]/modais/modalEditarLoja';
+
 
 
 
@@ -35,14 +37,17 @@ export default function TelaLoja() {
   const[loja, setLoja] = useState<Loja>(lojaMock);
 
   //pegar produtos melhores avaliados
-  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>(Produtos_mock);
+  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>(produtosMock);
   //todos os produtos da loja
-  const [produtos, setProdutos] = useState<Produto[]>(Produtos_mock);
+  const [produtos, setProdutos] = useState<Produto[]>(produtosMock);
   //todas as avaliações da loja
   const [reviews, setReviews] = useState<Review[]>(reviewsMock);
 
   //verifica se o usuário logado é dono daquela loja
   const [isOwner, setIsOwner] = useState<boolean>(false);
+
+  //exibe ou não o modal
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
 
   useEffect(() => {
       //retorna caso n tenha conseguido extrair o id
@@ -66,8 +71,8 @@ export default function TelaLoja() {
         }catch(error){
           console.error("Erro ao conectar com o back:",error);
           setLoja(lojaMock);
-          setProdutos(Produtos_mock);
-          setMelhoresAvaliados(Produtos_mock);
+          setProdutos(produtosMock);
+          setMelhoresAvaliados(produtosMock);
           setReviews(reviewsMock)
 
         }
@@ -117,11 +122,11 @@ export default function TelaLoja() {
         
          
 
-          { isOwner && (
+          {/* { isOwner && ( */}
              <div className="absolute top-8 right-12 z-20 flex flex-col gap-3">
                {/* botão de editar loja */}
             <button 
-              onClick={() => console.log("teste")}
+              onClick={() => setIsModalEditOpen(true)}
               className="w-10 h-10 bg-[#6A38F3] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
             >
               <img 
@@ -145,7 +150,7 @@ export default function TelaLoja() {
             </button>
 
           </div>   
-          )} 
+          {/* )}  */}
            
       
 
@@ -254,7 +259,15 @@ export default function TelaLoja() {
 
 
 
+           
       </div>
+      
+            <ModalEditarLoja 
+        isOpen={isModalEditOpen} 
+        onClose={() => setIsModalEditOpen(false)} 
+        loja={loja} 
+      />
+      
       
     </div>
       

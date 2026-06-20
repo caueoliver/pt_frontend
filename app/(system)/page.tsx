@@ -9,7 +9,7 @@ import { CardCategoria, Categoria } from '@/components/cardCategoria';
 import { FiltroLojas } from '@/components/filtroLoja';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutosMaisBaratos, getProdutosRecentes, getProdutosMelhoresAvaliados, getAllProdutos, getAllLojas } from '@/api/api.js';
-import {Categ_mock, Lojas_mock, Produtos_mock} from '@/mock/mockData'
+import {categMock, lojasMock, produtosMock} from '@/mock/mockData'
 import { Produto } from '@/interfaces/produtoInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { GridProdutos } from '@/components/gridProdutos';
@@ -46,10 +46,10 @@ export default function TelaFeed() {
 
       }catch(error){
         console.error("Erro ao conectar com o back:",error);
-        setProdutos(Produtos_mock);
-        setMaisBaratos(Produtos_mock);
-        setRecentes(Produtos_mock);
-        setMelhoresAvaliados(Produtos_mock);
+        setProdutos(produtosMock);
+        setMaisBaratos(produtosMock);
+        setRecentes(produtosMock);
+        setMelhoresAvaliados(produtosMock);
       }
     };
     buscarProdutos();
@@ -65,16 +65,16 @@ export default function TelaFeed() {
         setLojas(todasDb);
       }catch(error){
         console.error("Erro", error);
-        setLojas(Lojas_mock);
+        setLojas(lojasMock);
       }
     };
     buscarLojas
   }, []);
 
   //estado para guardar lojas
-  const [lojasExibidas, setLojasExibidas] = useState(Lojas_mock);
+  const [lojasExibidas, setLojasExibidas] = useState(lojasMock);
   //estado para guardar categorias
-  const [categorias, setCategorias] = useState(Categ_mock);
+  const [categorias, setCategorias] = useState(categMock);
 
   const [produtosExibidos, setProdutosExibidos] = useState(produtos);
 
@@ -106,10 +106,10 @@ const busca = (termo: string) => {
   const aplicarFiltroDeLojas = (categoriasMarcadas: string[]) => {
     // se o usuário desmarcou tudo, exibe todas as lojas de novo
     if (categoriasMarcadas.length === 0) {
-      setLojasExibidas(Lojas_mock);
+      setLojasExibidas(lojasMock);
     } else {
       // o .filter só deixa passar a loja se a categoria dela estiver dentro da lista de marcadas
-      const lojasFiltradas = Lojas_mock.filter((loja) =>
+      const lojasFiltradas = lojasMock.filter((loja) => 
         categoriasMarcadas.includes(loja.categoria)
       );
       setLojasExibidas(lojasFiltradas);
