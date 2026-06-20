@@ -2,23 +2,31 @@
 import { ReactNode } from 'react';
 
 // reactNode é qualquer coisa que o React consiga renderizar na tela
-interface CarrosselGenericoProps {
-  titulo: string;
+interface CarrosselProps {
+  //as interrogações fazem com que as propriedades não sejam obrigatórias
+  titulo?: string;
+  subtitulo?: string;
   children: ReactNode; 
 }
 
-export function CarrosselGenerico({ titulo, children }: CarrosselGenericoProps) {
+export function Carrossel({ titulo, subtitulo, children }: CarrosselProps) {
   return (
-    //ao inves de definir uma altura fix, esse carrossel se ajusta ao elemento que vai ser renderizado
     <div className='w-full flex flex-col shrink-0'>
       
-      <h2 className=' text-black font-bold mb-4 text-4xl'>
-    {titulo}
-      </h2>
+      {/* só  printa o titulo se a propriedade 'titulo' for enviada */}
+      {titulo && (
+        <div className='mb-4'>
+          <span className='text-black text-4xl font-bold'>{titulo}</span>
+          
+          {/* só printa o subtitulo apenas se a propriedade 'subtitulo' for enviada */}
+          {subtitulo && (
+           <span className='text-[#6A38F3] text-x font-bold ml-2'>{subtitulo}</span>
+          )}
+        </div>
+      )}
 
-
-      <div className="w-full flex gap-18 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
-        {/* renderiza qualquer coisa que vier como parametro */}
+      {/* A área de rolagem dos cards */}
+      <div className="w-full flex gap-10 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
         {children}
       </div>
 

@@ -48,26 +48,31 @@ export async function deleteUser(userId){
   return res.data;
 }
 
+//produtos mais baratos geral
 export async function getProdutosMaisBaratos() {
   const res = await api.get('/produto/mais-baratos');
   return res.data;
 }
 
+//produtos mais recentes gerais
 export async function getProdutosRecentes() {
   const res = await api.get('/produto/recentes');
   return res.data;
 }
 
+//melhores produtos gerais
 export async function getProdutosMelhoresAvaliados() {
   const res = await api.get('/produto/melhores-avaliados');
   return res.data;
 }
 
+//todos os produtos
 export async function getAllProdutos(){
   const res = await api.get('/produto')
   return res.data;
 }
 
+//todas as lojas
 export async function getAllLojas(){
   const res = await api.get('/loja')
   return res.data;
@@ -102,5 +107,38 @@ export async function editarComentario(id, conteudo) {
 
 export async function deletarComentario(id) {
   const res = await api.delete(`comentarios-avaliacao/${id}`);
+  return res.data;
+}
+
+//loja pelo id
+export async function getLojaById(lojaId){
+  const res = await api.get(`loja/${lojaId}`)
+  return res.data;
+}
+
+export async function getReviewsByLoja(lojaId){
+  const res = await api.get(`loja/reviews/${lojaId}`)
+  return res.data;
+}
+
+//melhores produtos de determinada loja
+export async function getProdutosMelhoresByLoja(lojaId){
+  const res = await api.get(`/produto/melhores-loja/${lojaId}`);
+  return res.data;
+}
+
+//todos os produtos de determinada loja
+export async function getProdutosByLoja(lojaId){
+  const res = await api.get('/produto/melhores-by-loja');
+  return res.data;
+}
+
+export async function getProdutos() {
+  const res = await api.get('produto');
+  return res.data;
+}
+
+export async function getLojas() {
+  const res = await api.get('loja');
   return res.data;
 }
