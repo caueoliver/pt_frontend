@@ -96,17 +96,17 @@ export async function deletarAvaliacao(id) {
 export async function criarComentario(avaliacaoLojaId, conteudo) {
   const token = localStorage.getItem('token');
   const usuarioId = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
-  const res = await api.post('comentarios-avaliacao', { usuarioId, avaliacaoLojaId, conteudo });
+  const res = await api.post('comentarios-avaliacao-loja', { usuarioId, avaliacaoLojaId, conteudo });
   return res.data;
 }
 
 export async function editarComentario(id, conteudo) {
-  const res = await api.patch(`comentarios-avaliacao/${id}`, { conteudo });
+  const res = await api.patch(`comentarios-avaliacao-loja/${id}`, { conteudo });
   return res.data;
 }
 
 export async function deletarComentario(id) {
-  const res = await api.delete(`comentarios-avaliacao/${id}`);
+  const res = await api.delete(`comentarios-avaliacao-loja/${id}`);
   return res.data;
 }
 

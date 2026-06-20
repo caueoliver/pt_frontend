@@ -21,7 +21,7 @@ type Avaliacao = {
   comentario?: string;
   usuario: { nome: string; profile_picture_url?: string | null };
   loja?: { nome: string };
-  comentariosAvaliacoes: Comentario[];
+  comentariosAvaliacoesLojaLoja: Comentario[];
 };
 
 export default function PaginaAvaliacao() {
@@ -66,7 +66,7 @@ export default function PaginaAvaliacao() {
     setAvaliacoes((prev) =>
       prev.map((av) =>
         av.id === avaliacaoId
-          ? { ...av, comentariosAvaliacoes: av.comentariosAvaliacoes.map((c) => c.id === comentarioId ? { ...c, conteudo } : c) }
+          ? { ...av, comentariosAvaliacoesLoja: av.comentariosAvaliacoesLoja.map((c) => c.id === comentarioId ? { ...c, conteudo } : c) }
           : av
       )
     );
@@ -77,7 +77,7 @@ export default function PaginaAvaliacao() {
     setAvaliacoes((prev) =>
       prev.map((av) =>
         av.id === avaliacaoId
-          ? { ...av, comentariosAvaliacoes: [...av.comentariosAvaliacoes, novoComentario] }
+          ? { ...av, comentariosAvaliacoesLoja: [...av.comentariosAvaliacoesLoja, novoComentario] }
           : av
       )
     );
@@ -145,7 +145,7 @@ export default function PaginaAvaliacao() {
 
           <div className="bg-[#F6F3E4] px-[10%] pt-5 pb-5">
 
-            {av.comentariosAvaliacoes.map((c) => (
+            {av.comentariosAvaliacoesLoja.map((c) => (
               // group pra mostrar o lápis só quando passa o mouse no comentário
               <div key={c.id} className="flex gap-3 mb-4 pl-3 border-l-2 border-gray-300 hover:border-[#6A38F3] transition-colors group">
                 {/* avatar do comentador — foto se tiver, senão inicial */}
@@ -215,7 +215,7 @@ export default function PaginaAvaliacao() {
           onClose={() => setComentarioEditando(null)}
           onSalvo={(conteudo) => {
             const avaliacaoId = avaliacoes.find((av) =>
-              av.comentariosAvaliacoes.some((c) => c.id === comentarioEditando.id)
+              av.comentariosAvaliacoesLoja.some((c) => c.id === comentarioEditando.id)
             )?.id;
             if (avaliacaoId) handleComentarioSalvo(avaliacaoId, comentarioEditando.id, conteudo);
             setComentarioEditando(null);
@@ -224,7 +224,7 @@ export default function PaginaAvaliacao() {
             setAvaliacoes((prev) =>
               prev.map((av) => ({
                 ...av,
-                comentariosAvaliacoes: av.comentariosAvaliacoes.filter((c) => c.id !== comentarioEditando.id),
+                comentariosAvaliacoesLoja: av.comentariosAvaliacoesLoja.filter((c) => c.id !== comentarioEditando.id),
               }))
             );
             setComentarioEditando(null);
