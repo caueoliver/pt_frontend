@@ -76,3 +76,8 @@ export async function getLojas() {
   const res = await api.get('loja');
   return res.data;
 }
+
+export async function getAvaliacoesProduto(productId) {
+  const res = await api.get(`/avaliacaoproduto/produto/${productId}`);
+  return res.data;
+}
