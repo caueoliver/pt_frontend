@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { CardProduto } from './cardProduto';
-import { Produto } from '@/interfaces/produtoInterface';
+import { Produto } from '@/interfaces/produtoCardInterface';
 
 interface GridProps {
   produtos: Produto[];

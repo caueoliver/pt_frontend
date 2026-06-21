@@ -1,17 +1,21 @@
 import { Review } from "@/interfaces/reviewInterface";
-
+import Link from 'next/link';
 
 
 export function CardComentario({ review }: { review: Review }) {
   return (
     <div className="bg-[#F6F3E4] rounded-[2rem] p-8 w-[800px] flex gap-6 shrink-0 shadow-lg">
       
+      
+
+      <Link href={`/perfil/${review.usuarioId}`} className="flex gap-4 hover:opacity-80 transition-opacity">
       {/* foto de perfil grande */}
       <img 
         src={review.avatarUrl || "https://placehold.co/150x150?text=User"} 
         alt={review.nomeUsuario} 
         className="w-28 h-28 rounded-full object-cover shrink-0"
       />
+      </Link>
       
       {/* conteúdo a direita da foto */}
       <div className="flex-1 flex flex-col justify-between">

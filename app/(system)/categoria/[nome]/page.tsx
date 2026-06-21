@@ -7,7 +7,7 @@ import { CardProduto } from '@/components/cardProduto';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutos, getLojas } from '@/api/api.js';
 import {categMock, lojasMock, produtosMock} from '@/mock/mockData';
-import { Produto } from '@/interfaces/produtoInterface';
+import { Produto } from '@/interfaces/produtoCardInterface';
 
 type Subcategoria = {
   id: number;

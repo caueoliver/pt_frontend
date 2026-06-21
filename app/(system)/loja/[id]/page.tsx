@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getProdutosByLoja , getProdutosMelhoresByLoja,  getLojaById, getReviewsByLoja } from '@/api/api.js';
 import { Carrossel } from '@/components/carrossel';
 import { produtosMock, reviewsMock } from '@/mock/mockData';
-import { Produto } from '@/interfaces/produtoInterface';
+import { Produto } from '@/interfaces/produtoCardInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { jwtDecode } from 'jwt-decode';
 import { useParams } from 'next/navigation';
@@ -122,7 +122,7 @@ export default function TelaLoja() {
         
          
 
-          {/* { isOwner && ( */}
+          { isOwner && (
              <div className="absolute top-8 right-12 z-20 flex flex-col gap-3">
                {/* botão de editar loja */}
             <button 
@@ -150,7 +150,7 @@ export default function TelaLoja() {
             </button>
 
           </div>   
-          {/* )}  */}
+          )}  
            
       
 
