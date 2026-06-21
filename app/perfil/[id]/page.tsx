@@ -50,6 +50,12 @@ export default function Profile() {
   // states de produtos e lojas
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [lojas, setLojas] = useState<Loja[]>([]);
+  const [isAddLojaOpen, setIsAddLojaOpen] = useState(false);
+  const [lojaNome, setLojaNome] = useState("");
+  const [lojaCategoria, setLojaCategoria] = useState("");
+  const [fotoPerfil, setFotoPerfil] = useState<File | null>(null);
+  const [logoSvg, setLogoSvg] = useState<File | null>(null);
+  const [banner, setBanner] = useState<File | null>(null);
 
   // states de modais de edicao
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
@@ -167,6 +173,33 @@ export default function Profile() {
       alert("Não foi possível deletar a conta!");
     }
   }
+  // Função para criar/adicionar loja
+  async function handleAddLoja() {
+    if (!lojaNome || !lojaCategoria) {
+      alert("Por favor, preencha o nome e a categoria da loja.");
+      return;
+    }
+
+    try {
+      // Aqui você faz a integração com seu backend/API futuramente
+      console.log("Criando loja:", { lojaNome, lojaCategoria, fotoPerfil, logoSvg, banner });
+      
+      alert("Loja adicionada com sucesso!");
+      closeAddLojaModal();
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao adicionar a loja.");
+    }
+  }
+
+  function closeAddLojaModal() {
+    setLojaNome("");
+    setLojaCategoria("");
+    setFotoPerfil(null);
+    setLogoSvg(null);
+    setBanner(null);
+    setIsAddLojaOpen(false);
+  }
 
   function closePasswordModal() {
     setOldPassword("");
@@ -181,6 +214,7 @@ export default function Profile() {
     setEditEmail(user?.email || "");
     setIsEditProfileOpen(false);   
   }
+  
 
   return (
     <main className="min-h-screen bg-[#F6F3E4]">
@@ -252,7 +286,7 @@ export default function Profile() {
           <div className="flex items-center gap-4 mb-6">
             <h2 className="text-3xl font-bold text-black">Lojas</h2>
             {isOwnProfile && (
-              <button onClick={() => alert("Adicionar loja")} className="bg-[#6A38F3] text-white rounded-full w-9 h-9 flex items-center justify-center font-bold text-xl cursor-pointer hover:scale-105 transition shadow-sm">
+              <button onClick={() => setIsAddLojaOpen(true)} className="bg-[#6A38F3] text-white rounded-full w-9 h-9 flex items-center justify-center font-bold text-xl cursor-pointer hover:scale-105 transition shadow-sm">
                 +
               </button>
             )}
@@ -276,7 +310,7 @@ export default function Profile() {
           )}
         </div>
 
-        {/* avaliacoes preenchendo melhor horizontalmente */}
+        {/* avaliacoes */}
         <div className="mt-16 mb-[100px]">
           <h2 className="text-3xl font-bold mb-8 text-black">Avaliações</h2>
           <div className="flex flex-col gap-6 w-full max-w-[1300px]">
@@ -370,6 +404,106 @@ export default function Profile() {
           </div>
         </div>
       )}
+    {/* Modal: adicionar loja */}
+      {isAddLojaOpen && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center z-50">
+          <div className="relative w-[560px] bg-[#EDEDED] rounded-[32px] p-8 shadow-xl text-center">
+            {/* Botap de fechar */}
+            <button 
+              onClick={closeAddLojaModal} 
+              className="absolute right-6 top-6 text-black hover:opacity-60 transition cursor-pointer"
+              aria-label="Fechar"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-7 h-7">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <h2 className="text-[32px] font-medium text-black mt-4 mb-6">Adicionar loja</h2>
+
+            {/* IMputs */}
+            <div className="flex flex-col gap-4">
+              <input 
+                type="text" 
+                placeholder="Nome da loja" 
+                value={lojaNome}
+                onChange={(e) => setLojaNome(e.target.value)}
+                className="w-full h-[52px] rounded-full px-6 bg-white outline-none text-base text-gray-700 placeholder-gray-400"
+              />
+              
+              {/* Categorias */}
+              <div className="relative">
+                <select 
+                  value={lojaCategoria}
+                  onChange={(e) => setLojaCategoria(e.target.value)}
+                  className="w-full h-[52px] rounded-full px-6 bg-white outline-none text-base text-gray-700 appearance-none cursor-pointer placeholder-gray-400"
+                >
+                  <option value="" disabled hidden>Categoria</option>
+                  <option value="Alimentos">Alimentos & Bebidas</option>
+                  <option value="Vestuario">Vestuário / Roupas</option>
+                  <option value="Eletronicos">Eletrônicos</option>
+                  <option value="Outros">Outros</option>
+                </select>
+                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Upload imagem 1 */}
+              <label className="border-[2px] border-dashed border-[#A155FF] rounded-[18px] py-4 px-4 flex flex-col items-center justify-center cursor-pointer hover:bg-purple-50/40 transition bg-transparent group">
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => setFotoPerfil(e.target.files?.[0] || null)} />
+                <div className="bg-[#9A33FF] text-white p-2.5 rounded-lg mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                    <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-normal text-gray-700 group-hover:text-black">
+                  {fotoPerfil ? fotoPerfil.name : "Anexe a foto de perfil de sua loja"}
+                </span>
+              </label>
+
+              {/* Upload imagem 2*/}
+              <label className="border-[2px] border-dashed border-[#A155FF] rounded-[18px] py-4 px-4 flex flex-col items-center justify-center cursor-pointer hover:bg-purple-50/40 transition bg-transparent group">
+                <input type="file" accept=".svg" className="hidden" onChange={(e) => setLogoSvg(e.target.files?.[0] || null)} />
+                <div className="bg-[#9A33FF] text-white p-2.5 rounded-lg mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                    <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-normal text-gray-700 group-hover:text-black">
+                  {logoSvg ? logoSvg.name : "Anexe a logo em SVG de sua loja"}
+                </span>
+              </label>
+
+              {/* Upload imagem 3 */}
+              <label className="border-[2px] border-dashed border-[#A155FF] rounded-[18px] py-4 px-4 flex flex-col items-center justify-center cursor-pointer hover:bg-purple-50/40 transition bg-transparent group">
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => setBanner(e.target.files?.[0] || null)} />
+                <div className="bg-[#9A33FF] text-white p-2.5 rounded-lg mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                    <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-normal text-gray-700 group-hover:text-black">
+                  {banner ? banner.name : "Anexe o banner de sua loja"}
+                </span>
+              </label>
+            </div>
+
+            {/* Adicionar */}
+            <button 
+              onClick={handleAddLoja}
+              className="w-full mt-8 h-[48px] rounded-full bg-[#8B00FF] hover:bg-[#7700EE] text-white text-lg font-medium shadow-md transition cursor-pointer"
+            >
+              Adicionar
+            </button>
+          </div>
+        </div>
+      )}
+
+
+
     </main>
   );
 }
