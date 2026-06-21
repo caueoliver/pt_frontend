@@ -66,13 +66,13 @@ export async function getProdutosMelhoresAvaliados() {
 
 //todos os produtos
 export async function getAllProdutos(){
-  const res = await api.get('/produto')
+  const res = await api.get('/produto/todos')
   return res.data;
 }
 
 //todas as lojas
 export async function getAllLojas(){
-  const res = await api.get('/loja')
+  const res = await api.get('/loja/todos')
   return res.data;
 }
 
@@ -115,19 +115,19 @@ export async function getLojaById(lojaId){
 }
 //reviews pelo id da loja
 export async function getReviewsByLoja(lojaId){
-  const res = await api.get(`loja/reviews/${lojaId}`)
+  const res = await api.get(`loja/${lojaId}/reviews`)
   return res.data;
 }
 
 //melhores produtos de determinada loja
 export async function getProdutosMelhoresByLoja(lojaId){
-  const res = await api.get(`/produto/melhores-loja/${lojaId}`);
+  const res = await api.get(`/loja/${lojaId}/melhores`);
   return res.data;
 }
 
 //todos os produtos de determinada loja
 export async function getProdutosByLoja(lojaId){
-  const res = await api.get('/produto/melhores-by-loja');
+  const res = await api.get(`/loja/${lojaId}/produtos`);
   return res.data;
 }
 
