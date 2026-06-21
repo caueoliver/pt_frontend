@@ -6,8 +6,9 @@ import Link from 'next/link';
 import { CardComentario } from '@/components/cardComentario';
 import { getLojaById, getReviewsByLoja } from '@/api/api.js';
 import { Loja } from '@/interfaces/lojaInterface';
-import { reviewsMock } from '@/mock/mockData'; // Usando seu mock para testar
+import { reviewsMock } from '@/mock/mockData';
 import { Review } from '@/interfaces/reviewInterface';
+import { ModalCriarComentario } from './modais/modalCriarComentario';
 
 export default function TelaReviewsLoja() {
 
@@ -23,10 +24,16 @@ export default function TelaReviewsLoja() {
   }
 
   const { id } = useParams() as { id: string };
-  const[loja, setLoja] = useState<Loja>(lojaMock);
+  const [loja, setLoja] = useState<Loja>(lojaMock);
   const [reviews, setReviews] = useState<Review[]>(reviewsMock);
+  const [isLogged, setIsLogged] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   
+  useEffect(() => {
+    if (localStorage.getItem('token')) setIsLogged(true);
+  }, []);
+
   useEffect(() => {
     if (!id) return;
 
@@ -111,10 +118,19 @@ export default function TelaReviewsLoja() {
             </span>
         
             {/* estrelas da loja */}
-            <div className="text-yellow-400 text-5xl tracking-widest mt-6 mb-12">
+            <div className="text-yellow-400 text-5xl tracking-widest mt-6 mb-8">
             {"★".repeat(loja.avaliacaoMedia)}
             {"☆".repeat(5 - Math.floor(loja.avaliacaoMedia))}
             </div>
+
+            {isLogged && (
+              <button
+                onClick={() => setModalOpen(true)}
+                className="bg-[#6A38F3] hover:bg-[#5a2ee0] text-white font-bold text-base rounded-full px-16 py-3 transition-colors mb-12"
+              >
+                Adicionar Review
+              </button>
+            )}
 
 
             {/*  lista de comentários na vertical */}
@@ -134,6 +150,13 @@ export default function TelaReviewsLoja() {
             </div>
         </section>
 
+      {modalOpen && reviews.length > 0 && (
+        <ModalCriarComentario
+          avaliacaoId={reviews[0].id}
+          onClose={() => setModalOpen(false)}
+          onCriado={() => setModalOpen(false)}
+        />
+      )}
 
     </div>
   );

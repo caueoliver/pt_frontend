@@ -14,6 +14,7 @@ import { CardComentario } from '@/components/cardComentario';
 import { GridProdutos } from '@/components/gridProdutos';
 import { Review } from '@/interfaces/reviewInterface';
 import { ModalEditarLoja } from '@/app/(system)/loja/[id]/modais/modalEditarLoja';
+import { ModalCriarProduto } from '@/app/(system)/loja/[id]/modais/modalCriarProduto';
 
 
 
@@ -48,6 +49,7 @@ export default function TelaLoja() {
 
   //exibe ou não o modal
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const [isModalCriarProdutoOpen, setIsModalCriarProdutoOpen] = useState(false);
 
   useEffect(() => {
       //retorna caso n tenha conseguido extrair o id
@@ -137,8 +139,8 @@ export default function TelaLoja() {
             </button>
 
             {/* botão de adicionar produto */}
-            <button 
-              onClick={() => console.log("Adicionar produto clicado!")}
+            <button
+              onClick={() => setIsModalCriarProdutoOpen(true)}
               className="w-10 h-10 bg-[#6A38F3] rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 active:scale-95"
               title="Adicionar Produto"
             >
@@ -267,6 +269,13 @@ export default function TelaLoja() {
         onClose={() => setIsModalEditOpen(false)}
         loja={loja}
       />
+
+      {isModalCriarProdutoOpen && (
+        <ModalCriarProduto
+          lojaId={Number(id)}
+          onClose={() => setIsModalCriarProdutoOpen(false)}
+        />
+      )}
       
       
     </div>
