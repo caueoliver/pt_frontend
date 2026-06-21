@@ -175,7 +175,7 @@ export async function getProdutos() {
 }
 
 export async function getLojas() {
-  const res = await api.get('loja');
+  const res = await api.get('loja/todos');
   return res.data;
 }
 

@@ -57,13 +57,14 @@ export default function CategoriaEspecifica() {
 
         // mapeia o shape do back para o que o CardProduto espera
         const produtosMapeados: Produto[] = produtosDaCategoria.map((p: any) => ({
-          id: p.id,
-          name: p.name,
-          preco: p.preco,
-          idLoja: p.lojaId,
-          estoque: p.estoque,
-          imagemUrl: p.imagensProdutos?.[0]?.imageUrl || '',
-          avaliacao: 0,
+        id: p.id,
+        name: p.name,
+        preco: p.preco,
+        idLoja: p.lojaId,
+        estoque: p.estoque,
+        imagemUrl: p.imagensProdutos?.[0]?.imageUrl || '',
+        avaliacao: 0,
+        categoria: p.categoria,  
         }));
 
         setProdutos(produtosMapeados);
