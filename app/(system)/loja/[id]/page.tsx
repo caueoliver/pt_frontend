@@ -72,7 +72,6 @@ export default function TelaLoja() {
   
         }catch(error){
           console.error("Erro ao conectar com o back:",error);
-          setLoja(lojaMock);
           setProdutos(produtosMock);
           setMelhoresAvaliados(produtosMock);
           setReviews(reviewsMock)
@@ -81,6 +80,22 @@ export default function TelaLoja() {
       };
       buscar();
     }, [id]);
+
+  const buscarDadosLoja = async () => {
+    if(!id) return;
+
+    try{
+      const [lojaDb] = await Promise.all([
+        getLojaById(id),
+      ]);
+
+      setLoja(lojaDb);
+  
+
+    } catch(error){
+      console.error("Erro ao conectar com o back:",error);
+    }
+  };
 
   //função para pegar o id do usuário logado
   useEffect(() => {
@@ -264,10 +279,11 @@ export default function TelaLoja() {
            
       </div>
       
-            <ModalEditarLoja
-        isOpen={isModalEditOpen}
-        onClose={() => setIsModalEditOpen(false)}
-        loja={loja}
+      <ModalEditarLoja 
+      isOpen={isModalEditOpen} 
+      onClose={() => setIsModalEditOpen(false)} 
+      loja={loja} 
+      onAtualizar={buscarDadosLoja}
       />
 
       {isModalCriarProdutoOpen && (
