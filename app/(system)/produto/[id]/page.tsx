@@ -3,7 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { getAvaliacoesProduto, getProdutoById } from "@/api/api.js"; 
+import { deleteProduto, getAvaliacoesProduto, getProdutoById } from "@/api/api.js";
+import { FiEdit2, FiStar } from "react-icons/fi";
+import { ModalEditarProduto } from "./modais/modalEditarProduto";
+import { ModalCriarAvaliacao } from "./modais/modalCriarAvaliacao";
 
 // tipos 
 interface ProductImage {
