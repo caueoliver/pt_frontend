@@ -90,11 +90,6 @@ export async function getAllLojas(){
   return res.data;
 }
 
-// todas as categorias
-export async function getAllCategorias() {
-  const res = await api.get('/categorias');
-  return res.data;
-}
 
 export async function getAvaliacoesLoja() {
   const res = await api.get('avaliacoes-loja');
@@ -129,10 +124,6 @@ export async function deletarComentario(id) {
 }
 
 //loja pelo id
-export async function getProdutoById(produtoId) {
-  const res = await api.get(`produto/${produtoId}`);
-  return res.data;
-}
 
 export async function getLojaById(lojaId){
   const res = await api.get(`loja/${lojaId}`)
