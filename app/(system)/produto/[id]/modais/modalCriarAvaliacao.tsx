@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import api from '@/api/api.js';
+import { criarAvaliacaoProduto } from '@/api/api.js';
 
 type Props = {
   produtoId: number;
@@ -19,10 +19,8 @@ export function ModalCriarAvaliacao({ produtoId, nomeProduto, onClose, onCriado 
     if (nota === 0) return;
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const usuarioId = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
-      const res = await api.post('/avaliacao_produto', { usuarioId, productId: produtoId, nota, comentario });
-      onCriado(res.data);
+      const criado = await criarAvaliacaoProduto(produtoId, nota, comentario);
+      onCriado(criado);
       onClose();
     } catch (err) {
       console.error('Erro ao criar avaliação:', err);
