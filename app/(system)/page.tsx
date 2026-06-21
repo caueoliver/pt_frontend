@@ -9,7 +9,7 @@ import { CardCategoria} from '@/components/cardCategoria';
 import { FiltroLojas } from '@/components/filtroLoja';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutosMaisBaratos, getProdutosRecentes, getProdutosMelhoresAvaliados, getAllProdutos, getAllLojas, getAllCategorias } from '@/api/api.js';
-import {categMock, lojasMock, produtosMock} from '@/mock/mockData'
+
 import { Produto } from '@/interfaces/produtoCardInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { GridProdutos } from '@/components/gridProdutos';
@@ -55,13 +55,6 @@ export default function TelaFeed() {
 
       }catch(error){
         console.error("Erro ao conectar com o back:",error);
-        setProdutos(produtosMock);
-        setMaisBaratos(produtosMock);
-        setRecentes(produtosMock);
-        setMelhoresAvaliados(produtosMock);
-        setLojas(lojasMock);
-        setCategorias(categMock);
-        setCategorias(categMock);
       }
     };
     buscarNoBack();
@@ -69,7 +62,7 @@ export default function TelaFeed() {
 
 
   //estado para guardar lojas
-  const [lojasExibidas, setLojasExibidas] = useState(lojasMock);
+  const [lojasExibidas, setLojasExibidas] = useState<Loja[]>([]);
 
   const [produtosExibidos, setProdutosExibidos] = useState(produtos);
 

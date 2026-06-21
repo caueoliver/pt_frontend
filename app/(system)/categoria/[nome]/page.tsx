@@ -62,7 +62,7 @@ export default function CategoriaEspecifica() {
         preco: p.preco,
         idLoja: p.lojaId,
         estoque: p.estoque,
-        imagemUrl: p.imagensProdutos?.[0]?.imageUrl || '',
+        imagemUrl: p.imagens?.[0]?.imageUrl || 'https://placehold.co/200x200/e5e7eb/9ca3af?text=Produto',
         avaliacao: 0,
         categoria: p.categoria,  
         }));
@@ -72,11 +72,11 @@ export default function CategoriaEspecifica() {
 
         // busca as subcategorias da categoria atual (filhas dela)
         const categoriaAtual = todasCategorias.find(
-          (c: any) => c.name.toLowerCase() === nomeDecodificado.toLowerCase()
+          (c: any) => c.nome.toLowerCase() === nomeDecodificado.toLowerCase()
         );
         if (categoriaAtual?.subCategories) {
           setSubcategorias(
-            categoriaAtual.subCategories.map((s: any) => ({ id: s.id, nome: s.name }))
+            categoriaAtual.subCategories.map((s: any) => ({ id: s.id, nome: s.nome }))
           );
         }
       } catch (error) {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { reviewsUser, getUserById, updateProfile, updatePassword, deleteUser,
          getLojasByUsuario, getProdutosByUsuario} from "@/api/api.js";
 import { useParams } from "next/navigation";
-import { fakeUser, fakeReviews } from "@/mock/mockData";
+
 
 // Interfaces
 interface UserProfile {
@@ -81,14 +81,19 @@ export default function Profile() {
         const lojasData = await getLojasByUsuario(userId);
         const produtosData = await getProdutosByUsuario(userId);
 
-        setUser(userData);
+        setUser({
+          name: userData.name,
+          username: userData.nome,
+          email: userData.email,
+          avatarUrl: userData.profile_picture_url || undefined,
+        });
         setReviews(reviewsData);
         setLojas(lojasData);
         setProdutos(produtosData);
 
         // incrementa nos modais os dados do banco
         setEditName(userData.name);
-        setEditUsername(userData.username);
+        setEditUsername(userData.nome);
         setEditEmail(userData.email);
 
         // validar se o usuario logado é o dono do perfil
@@ -98,12 +103,7 @@ export default function Profile() {
         }
         
       } catch (error) {
-        console.error("Erro na integração, carregando fallbacks: ", error);
-        // fallbacks/Mocks de teste caso a API falhe na apresentação
-        setUser(fakeUser);
-        setReviews(fakeReviews);
-        setProdutos([]);
-        setLojas([]);
+        console.error("Erro na integração: ", error);
       } finally {
         setLoading(false);
       }
@@ -135,7 +135,7 @@ export default function Profile() {
   // Funções de Profile, Password, Delete
   async function handleUpdateProfile() {
     try {
-      await updateProfile(userId, { name: editName, username: editUsername, email: editEmail });
+      await updateProfile(userId, { name: editName, nome: editUsername, email: editEmail });
       setUser({ ...user!, name: editName, username: editUsername, email: editEmail });
       alert("Perfil atualizado com sucesso!");
       setIsEditProfileOpen(false);
@@ -228,7 +228,7 @@ export default function Profile() {
             </svg>
           </button>
           <div className="w-[180px] h-[180px] rounded-full overflow-hidden shadow-lg border-none border-[#F6F3E4]">
-            <img src={user.avatarUrl || "/default-avatar.png"} alt="Foto Perfil" className="w-full h-full object-cover" />
+            <img src={user.avatarUrl || "https://placehold.co/180x180/e5e7eb/9ca3af?text=Perfil"} alt="Foto Perfil" className="w-full h-full object-cover" />
           </div>
         </div>
       </div>
@@ -317,7 +317,7 @@ export default function Profile() {
             {reviews.map((review) => (
               <Link key={review.id} href={`/review/${review.id}`} className="w-full">
                 <div className="bg-[#F8F8F8] rounded-[35px] w-full p-6 flex items-center gap-6 cursor-pointer hover:scale-[1.005] transition shadow-sm">
-                  <img src={user.avatarUrl} alt={user.name} className="w-[120px] h-[120px] rounded-full object-cover shrink-0" />
+                  <img src={user.avatarUrl || "https://placehold.co/120x120/e5e7eb/9ca3af?text=Perfil"} alt={user.name} className="w-[120px] h-[120px] rounded-full object-cover shrink-0" />
                   <div className="flex-1 min-w-0">
                     <h3 className="text-3xl font-semibold text-black">{user.name}</h3>
                     <p className="text-[22px] text-[#444] mt-2 line-clamp-2">{review.comentario}</p>
@@ -343,7 +343,7 @@ export default function Profile() {
 
             <div className="flex flex-col items-center">
               <div className="relative">
-                <img src={user.avatarUrl} alt={user.name} className="w-[120px] h-[120px] rounded-full object-cover" />
+                <img src={user.avatarUrl || "https://placehold.co/120x120/e5e7eb/9ca3af?text=Perfil"} alt={user.name} className="w-[120px] h-[120px] rounded-full object-cover" />
                 <button className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-white w-8 h-8 rounded-full shadow-md flex items-center justify-center cursor-pointer">
                   <img src="/img_perfil/camera.png" alt="camera" />
                 </button>

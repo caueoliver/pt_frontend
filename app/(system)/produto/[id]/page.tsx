@@ -92,7 +92,7 @@ export default function Produto() {
 
       } catch (error) {
         console.error("Erro ao buscar dados do banco:", error);
-        alert("Não foi possível carregar os dados reais, usando mock.");
+        alert("Não foi possível carregar o produto.");
       } finally {
         setLoading(false);
       }

@@ -6,26 +6,14 @@ import Link from 'next/link';
 import { CardComentario } from '@/components/cardComentario';
 import { getLojaById, getReviewsByLoja } from '@/api/api.js';
 import { Loja } from '@/interfaces/lojaInterface';
-import { reviewsMock } from '@/mock/mockData';
+
 import { Review } from '@/interfaces/reviewInterface';
 import { ModalCriarComentario } from './modais/modalCriarComentario';
 
 export default function TelaReviewsLoja() {
-
-    const lojaMock: Loja  = {
-    id: 1,
-    nome: "Rare Beauty",
-    categoria: "beleza",
-    idDono: 1,
-    nomeDono: "Selena Gomes",
-    logoUrl: "/img_loja/rareBeauty_banner.png",
-    bannerUrl: "/img_loja/rareBeauty_banner.png", 
-    avaliacaoMedia: 5,
-  }
-
   const { id } = useParams() as { id: string };
-  const [loja, setLoja] = useState<Loja>(lojaMock);
-  const [reviews, setReviews] = useState<Review[]>(reviewsMock);
+  const [loja, setLoja] = useState<Loja | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [isLogged, setIsLogged] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -49,12 +37,13 @@ export default function TelaReviewsLoja() {
 
       } catch (error) {
         console.error("Erro ao buscar loja:", error);
-        setLoja(lojaMock)
       }
     };
     
     buscarDados();
   }, [id]);
+
+  if (!loja) return <div className="h-screen flex items-center justify-center text-2xl">Carregando...</div>;
 
   return (
     <div className="min-h-screen ">

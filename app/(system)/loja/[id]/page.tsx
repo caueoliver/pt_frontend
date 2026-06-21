@@ -4,7 +4,7 @@ import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { getProdutosByLoja , getProdutosMelhoresByLoja,  getLojaById, getReviewsByLoja } from '@/api/api.js';
 import { Carrossel } from '@/components/carrossel';
-import { produtosMock, reviewsMock } from '@/mock/mockData';
+
 import { Produto } from '@/interfaces/produtoCardInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { jwtDecode } from 'jwt-decode';
@@ -21,28 +21,17 @@ import { ModalCriarProduto } from '@/app/(system)/loja/[id]/modais/modalCriarPro
 
 
 export default function TelaLoja() {
-  const lojaMock: Loja  = {
-    id: 1,
-    nome: "Rare Beauty",
-    categoria: "beleza",
-    idDono: 1,
-    nomeDono: "Selena Gomes",
-    logoUrl: "/img_loja/rareBeauty_banner.png",
-    bannerUrl: "/img_loja/rareBeauty_banner.png", 
-    avaliacaoMedia: 5,
-  };
-
   //puxa o id da loja pela url
   const { id } = useParams() as { id: string };
   //loja a ser exibida
-  const[loja, setLoja] = useState<Loja>(lojaMock);
+  const[loja, setLoja] = useState<Loja | null>(null);
 
   //pegar produtos melhores avaliados
-  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>(produtosMock);
+  const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>([]);
   //todos os produtos da loja
-  const [produtos, setProdutos] = useState<Produto[]>(produtosMock);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   //todas as avaliações da loja
-  const [reviews, setReviews] = useState<Review[]>(reviewsMock);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   //verifica se o usuário logado é dono daquela loja
   const [isOwner, setIsOwner] = useState<boolean>(false);
@@ -72,10 +61,6 @@ export default function TelaLoja() {
   
         }catch(error){
           console.error("Erro ao conectar com o back:",error);
-          setProdutos(produtosMock);
-          setMelhoresAvaliados(produtosMock);
-          setReviews(reviewsMock)
-
         }
       };
       buscar();
@@ -109,24 +94,26 @@ export default function TelaLoja() {
         const loggedUserId = payloadDecodificado.sub || payloadDecodificado.id;
 
         //testa se existe um usuário logado e se id bate com o do dono da loja
-        if (loggedUserId && Number(loggedUserId) === loja.idDono) {
+        if (loggedUserId && loja && Number(loggedUserId) === loja.idDono) {
           setIsOwner(true);
         } else {
           setIsOwner(false);
         }
 
     }
-  }, [loja.idDono]);
+  }, [loja?.idDono]);
+
+  if (!loja) return <div className="h-screen flex items-center justify-center bg-[#F6F3E4] text-2xl">Carregando loja...</div>;
 
   return (
-    // fundo padrão da página 
+    // fundo padrão da página
     <div className="min-h-screen bg-[#F6F3E4]">
-    
+
       <div className="relative w-full h-[60vh] min-h-[450px] flex items-center justify-center overflow-hidden">
-        
+
         {/* banner*/}
-        <img 
-          src={loja.bannerUrl} 
+        <img
+          src={loja.bannerUrl}
           alt={`Banner da loja ${loja.nome}`}
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -279,12 +266,14 @@ export default function TelaLoja() {
            
       </div>
       
-      <ModalEditarLoja 
-      isOpen={isModalEditOpen} 
-      onClose={() => setIsModalEditOpen(false)} 
-      loja={loja} 
-      onAtualizar={buscarDadosLoja}
-      />
+      {loja && (
+        <ModalEditarLoja
+          isOpen={isModalEditOpen}
+          onClose={() => setIsModalEditOpen(false)}
+          loja={loja}
+          onAtualizar={buscarDadosLoja}
+        />
+      )}
 
       {isModalCriarProdutoOpen && (
         <ModalCriarProduto
