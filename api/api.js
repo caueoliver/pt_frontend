@@ -46,6 +46,20 @@ export async function deleteUser(userId){
   return res.data;
 }
 
+// todas as categorias
+export async function getAllCategorias() {
+  const res = await api.get('/categorias');
+  return res.data;
+}
+
+// produto by id
+export async function getProdutoById(id) {
+  console.log("Chamando URL:", `/produto/${id}`); 
+  const res = await api.get(`/produto/${id}`);
+  return res.data;
+}
+
+
 //produtos mais baratos gerais
 export async function getProdutosMaisBaratos() {
   const res = await api.get('/produto/mais-baratos');
@@ -115,6 +129,11 @@ export async function deletarComentario(id) {
 }
 
 //loja pelo id
+export async function getProdutoById(produtoId) {
+  const res = await api.get(`produto/${produtoId}`);
+  return res.data;
+}
+
 export async function getLojaById(lojaId){
   const res = await api.get(`loja/${lojaId}`)
   return res.data;
@@ -137,20 +156,57 @@ export async function getProdutosByLoja(lojaId){
   return res.data;
 }
 
+// atualizar dados da loja
+export async function updateLoja(id, data) {
+  const res = await api.put(`/loja/${id}`, data);
+  return res.data;
+}
+
+// deletar loja
+export async function deleteLoja(id) {
+  const res = await api.delete(`/loja/delete/${id}`);
+  return res.data;
+}
+
+export async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await api.post('/loja/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return res.data; // retorna { url: 'http://localhost:3001/uploads/...' }
+}
+
 export async function getProdutos() {
   const res = await api.get('produto');
   return res.data;
 }
 
 export async function getLojas() {
-  const res = await api.get('loja');
+  const res = await api.get('loja/todos');
+  return res.data;
+}
+
+export async function getCategorias() {
+  const res = await api.get('categorias');
   return res.data;
 }
 
 export async function getAvaliacoesProduto(productId) {
-  const res = await api.get(`/avaliacaoproduto/produto/${productId}`);
+  const res = await api.get(`/avaliacao_produto/produto/${productId}`); // com underscore
   return res.data;
 }
+
+export async function criarAvaliacaoProduto(productId, nota, comentario) {
+  const token = localStorage.getItem('token');
+  const usuarioId = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
+  const res = await api.post('/avaliacao_produto', { usuarioId, productId, nota, comentario });
+  return res.data;
+}
+
 //integração para as lojas
 export async function getLojasByUsuario(userId) {
   const res = await api.get(`/loja/usuario/${userId}`);
@@ -174,5 +230,15 @@ export async function createProduto(data) {
 
 export async function createImagensProduto(data) {
   const res = await api.post('/imagens-produto', data);
+  return res.data;
+}
+
+export async function updateProduto(id, data) {
+  const res = await api.put(`/produto/${id}`, data);
+  return res.data;
+}
+
+export async function deleteProduto(id) {
+  const res = await api.delete(`/produto/${id}`);
   return res.data;
 }

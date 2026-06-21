@@ -6,4 +6,7 @@ export interface Produto {
   estoque: number;
   avaliacao?: number;
   imagemUrl: string;
+  categoria?: {
+    name: string;
+  };
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { getAvaliacoesProduto } from "@/api/api.js"; 
+import { getAvaliacoesProduto, getProdutoById } from "@/api/api.js"; 
 
 // tipos 
 interface ProductImage {
@@ -35,61 +35,61 @@ interface Product {
 
 export default function Produto() {
   const params = useParams();
+  const router = useRouter();
   const productId = params.id as string;
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [produtoReal, setProdutoReal] = useState<any>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isLogged, setIsLogged] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
+  const [modalEditarOpen, setModalEditarOpen] = useState(false);
+  const [modalAvaliarOpen, setModalAvaliarOpen] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     
-    // Usando uma função async dentro do useEffect para podermos chamar a API
     async function loadPageData() {
-      // mock do produto 
-      const mockProduct: Product = {
-        id: productId || "1",
-        title: "Brownie Meio Amargo",
-        price: 4.70,
-        description: "BROWNIE MEIO AMARGO 80g\n\nRecheado com uma ganache de chocolate meio amargo bem cremosa...",
-        rating: 4.5,
-        reviewsCount: 15,
-        category: "mercado",
-        availableQuantity: 3,
-        images: [
-          { id: "mock1", url: "/img_produtos/brownie_frente.png" },
-          { id: "mock2", url: "/img_produtos/brownie_mini.jpg" },
-          { id: "mock3", url: "/img_produtos/brownie.png" },
-          { id: "mock4", url: "/img_produtos/brownie_tabela.jpg" },
-        ]
-      };
-
-      setProduct(mockProduct);
-      if (mockProduct.images.length > 0) setSelectedImage(mockProduct.images[0]);
-
-     //avaliacao real do crud 
       try {
-        const avaliacoesReais = await getAvaliacoesProduto(productId);
+        //busca produto
+        const produto = await getProdutoById(productId);
         
-        if (avaliacoesReais && avaliacoesReais.length > 0) {
-          // Formatando os dados do jeito que o Front-end precisa
-          const avaliacoesFormatadas = avaliacoesReais.map((av: any) => ({
-            id: av.id,
-            comment: av.comment,
-            rating: av.rating,
-            user: {
-              name: av.usuario?.name || "Usuário",
-              avatarUrl: av.usuario?.avatarUrl || "/img_logocjr/logo_cjr.png" // Foto padrão se o usuário não tiver
-            }
-          }));
-          setReviews(avaliacoesFormatadas);
-        } else {
-          setReviews([]); // Nenhuma avaliação no banco ainda
+        // busca avaliaçoes
+        const avaliacoes = await getAvaliacoesProduto(productId);
+
+        // Mapeia o produto do banco para o formato do seu front
+        const productFormatado: Product = {
+          id: String(produto.id),
+          title: produto.name,
+          price: produto.preco,
+          description: produto.description,
+          rating: produto.avaliacao || 4.5,
+          reviewsCount: avaliacoes?.length || 0,
+          category: produto.categoria?.name || "Geral",
+          availableQuantity: produto.estoque,
+          images: [{ id: "1", url: produto.imagemUrl || "/img_produtos/brownie.png" }]
+        };
+
+        setProduct(productFormatado);
+        if (productFormatado.images.length > 0) setSelectedImage(productFormatado.images[0]);
+
+        // formata avaliações
+        const avaliacoesFormatadas = avaliacoes?.map((av: any) => ({
+        id: av.id,
+        comment: av.comentario,   
+        user: {
+        name: av.usuario?.name || "Usuário",
+        avatarUrl: av.usuario?.profile_picture_url || "/img_logocjr/logo_cjr.png"  
         }
+        })) || [];
+        
+        setReviews(avaliacoesFormatadas);
+
       } catch (error) {
-        console.error("Erro ao buscar avaliações do banco:", error);
-        setReviews([]); // Deixa vazio caso dê erro (como aquele 401 Unauthorized)
+        console.error("Erro ao buscar dados do banco:", error);
+        alert("Não foi possível carregar os dados reais, usando mock.");
       } finally {
         setLoading(false);
       }
@@ -98,7 +98,6 @@ export default function Produto() {
     if (productId) {
       loadPageData();
     }
-    
   }, [productId]);
 
   if (loading) return <div className="h-screen flex items-center justify-center text-2xl">Carregando produto...</div>;
@@ -108,10 +107,10 @@ export default function Produto() {
     <main className="min-h-screen bg-[#F6F3E4] pb-20">
       <div className="max-w-[1200px] mx-auto pt-10">
         
-        {/* Seção Superior: Galeria e Detalhes */}
+        {/* seção superior: galeria e detalhes */}
         <section className="flex gap-10">
           
-          {/* Lado Esquerdo: Galeria de Imagens */}
+          {/* lado esquerdo: galeria de imagens */}
           <div className="flex gap-6 w[60%]">
             
             <button onClick={() => window.history.back()} className="mt-4 h-fit cursor-pointer hover:opacity-70 transition">
@@ -147,8 +146,28 @@ export default function Produto() {
 
           {/* Lado Direito: Informações do Produto */}
           <div className="w-1/2 flex flex-col pt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <h1 className="text-5xl font-medium text-black">{product.title}</h1>
+              <div className="flex gap-2 ml-2">
+                {isLogged && isOwner && (
+                  <button
+                    onClick={() => setModalEditarOpen(true)}
+                    className="w-9 h-9 bg-[#6A38F3] hover:bg-[#5a2ee0] rounded-full flex items-center justify-center transition-colors"
+                    title="Editar produto"
+                  >
+                    <FiEdit2 size={16} className="text-white" />
+                  </button>
+                )}
+                {isLogged && !isOwner && (
+                  <button
+                    onClick={() => setModalAvaliarOpen(true)}
+                    className="w-9 h-9 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors"
+                    title="Avaliar produto"
+                  >
+                    <FiStar size={16} className="text-white" />
+                  </button>
+                )}
+              </div>
             </div>
             
             <div className="flex items-center gap-2 mt-4 text-sm text-gray-600">
@@ -204,6 +223,40 @@ export default function Produto() {
         </section>
 
       </div>
+
+      {modalEditarOpen && produtoReal && (
+        <ModalEditarProduto
+          produto={{
+            id: produtoReal.id,
+            name: produtoReal.name,
+            categoriaId: produtoReal.categoriaId,
+            description: produtoReal.description,
+            preco: produtoReal.preco,
+            estoque: produtoReal.estoque,
+            imagens: produtoReal.imagensProdutos,
+          }}
+          onClose={() => setModalEditarOpen(false)}
+          onSalvo={() => setModalEditarOpen(false)}
+          onDeletado={async () => {
+            try {
+              await deleteProduto(produtoReal.id);
+              router.back();
+            } catch (err) {
+              console.error('Erro ao deletar produto:', err);
+            }
+          }}
+        />
+      )}
+
+      {modalAvaliarOpen && (
+        <ModalCriarAvaliacao
+          produtoId={Number(productId)}
+          nomeProduto={product.title}
+          onClose={() => setModalAvaliarOpen(false)}
+          onCriado={() => setModalAvaliarOpen(false)}
+        />
+      )}
+
     </main>
   );
 }

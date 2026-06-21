@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { CardProduto } from '@/components/cardProduto';
 import { BarraPesquisa } from '@/components/barraPesquisa';
-import { getProdutos, getLojas } from '@/api/api.js';
-import {categMock, lojasMock, produtosMock} from '@/mock/mockData';
+import { getAllProdutos, getLojas, getCategorias } from '@/api/api.js';
 import { Produto } from '@/interfaces/produtoCardInterface';
 
 type Subcategoria = {
@@ -24,119 +23,111 @@ type Loja = {
 const ordenacoes = ["Menor preço", "Maior preço", "Mais avaliados", "Mais recentes"];
 
 export default function CategoriaEspecifica() {
-  // pega o nome da categoria direto da URL
   const { nome } = useParams() as { nome: string };
+  const nomeDecodificado = decodeURIComponent(nome);
 
-  // listas do back
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [lojas, setLojas] = useState<Loja[]>([]);
   const [subcategorias, setSubcategorias] = useState<Subcategoria[]>([]);
-
-  // null é nenhuma subcategoria selecionada
   const [subcategoriaSelecionada, setSubcategoriaSelecionada] = useState<number | null>(null);
-
-  // isso é sem ordrenação aplicada
   const [ordenacao, setOrdenacao] = useState("");
-
-  // texto que digita na barra de pesquisa
   const [busca, setBusca] = useState("");
-
-  // começa na pagina 1
   const [paginaAtual, setPaginaAtual] = useState(1);
-
-  // true enquanto espera o backend responder pra mostrar o carregando...
   const [carregando, setCarregando] = useState(true);
-
-  // controla se as secoes extras tipo lojas, populares, recem adicionados aparecem
   const [isLogged, setIsLogged] = useState(false);
 
-  // quantos cards aparecem por pagina
   const produtosPorPagina = 10;
-
-  // copia o array pra nao mexer no resultado e depois ordena por avaliacao
-  const copiaParaPopulares = [...produtos];
-  copiaParaPopulares.sort((a, b) => b.avaliacao - a.avaliacao);
-  const maisPopulares = copiaParaPopulares.slice(0, 5);
-
-  // pega os ultimos 5 e inverte pro mais recente ficar em primeiro
-  const ultimos = produtos.slice(produtos.length - 5);
-  const recemAdicionados = [...ultimos].reverse();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) setIsLogged(true);
 
-    // useEffect nao pode ser async direto entao a funcao async fica dentro e ai é chamada depois
     const carregarDados = async () => {
       try {
-        const dataProdutos = await getProdutos();
-        setProdutos(dataProdutos);
+        const [todosProdutos, todasCategorias, todasLojas] = await Promise.all([
+          getAllProdutos(),
+          getCategorias(),
+          getLojas(),
+        ]);
 
-        const dataLojas = await getLojas();
-        setLojas(dataLojas);
+        // filtra produtos da categoria atual pelo nome da URL
+        const produtosDaCategoria = todosProdutos.filter((p: any) =>
+          p.categoria?.name?.toLowerCase() === nomeDecodificado.toLowerCase()
+        );
+
+        // mapeia o shape do back para o que o CardProduto espera
+        const produtosMapeados: Produto[] = produtosDaCategoria.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        preco: p.preco,
+        idLoja: p.lojaId,
+        estoque: p.estoque,
+        imagemUrl: p.imagensProdutos?.[0]?.imageUrl || '',
+        avaliacao: 0,
+        categoria: p.categoria,  
+        }));
+
+        setProdutos(produtosMapeados);
+        setLojas(todasLojas);
+
+        // busca as subcategorias da categoria atual (filhas dela)
+        const categoriaAtual = todasCategorias.find(
+          (c: any) => c.name.toLowerCase() === nomeDecodificado.toLowerCase()
+        );
+        if (categoriaAtual?.subCategories) {
+          setSubcategorias(
+            categoriaAtual.subCategories.map((s: any) => ({ id: s.id, nome: s.name }))
+          );
+        }
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
-        setProdutos(produtosMock);
-        
       } finally {
         setCarregando(false);
       }
     };
 
     carregarDados();
-  }, [nome]);
+  }, [nomeDecodificado]);
 
-  // filtra por texto digitado
   const produtosFiltrados = produtos.filter((p) => {
-    if (busca === "") return true;
-    return p.name.toLowerCase().includes(busca.toLowerCase());
+    const passaBusca = busca === "" || p.name.toLowerCase().includes(busca.toLowerCase());
+    return passaBusca;
   });
 
-  // ordena depois de filtrar
   produtosFiltrados.sort((a, b) => {
     if (ordenacao === "Menor preço") return a.preco - b.preco;
     if (ordenacao === "Maior preço") return b.preco - a.preco;
-    if (ordenacao === "Mais avaliados") return b.avaliacao - a.avaliacao;
+    if (ordenacao === "Mais avaliados") return (b.avaliacao ?? 0) - (a.avaliacao ?? 0);
     return 0;
   });
 
-  // esse ceil arredonda pra cima pra nao perder produtos na ultima pagina
   const totalPaginas = Math.ceil(produtosFiltrados.length / produtosPorPagina);
-
-  // corta so os produtos que cabem na pagina atual
   const inicio = (paginaAtual - 1) * produtosPorPagina;
-  const fim = paginaAtual * produtosPorPagina;
-  const produtosPaginados = produtosFiltrados.slice(inicio, fim);
+  const produtosPaginados = produtosFiltrados.slice(inicio, inicio + produtosPorPagina);
 
-  // gera 1, 2, 3, ... pra botar um botao por pagina
   const paginas: number[] = [];
-  for (let i = 1; i <= totalPaginas; i++) {
-    paginas.push(i);
-  }
+  for (let i = 1; i <= totalPaginas; i++) paginas.push(i);
 
-  // essa funcao roda quando o usuario digita na barra de pesquisa
   const handleBusca = (termo: string) => {
     setBusca(termo);
-    setPaginaAtual(1); // vc volta pra pagina 1 pra nao ficar numa pagina que nao existe mais
+    setPaginaAtual(1);
   };
 
-  // clicar de novo na mesma subcategoria deseleciona (volta pra null)
   const selecionarSubcategoria = (id: number) => {
-    if (id === subcategoriaSelecionada) {
-      setSubcategoriaSelecionada(null);
-    } else {
-      setSubcategoriaSelecionada(id);
-    }
+    setSubcategoriaSelecionada(id === subcategoriaSelecionada ? null : id);
   };
+
+  const copiaParaPopulares = [...produtos].sort((a, b) => (b.avaliacao ?? 0) - (a.avaliacao ?? 0));
+  const maisPopulares = copiaParaPopulares.slice(0, 5);
+  const recemAdicionados = [...produtos].slice(-5).reverse();
 
   return (
     <div className="bg-[#F6F3E4] min-h-screen">
 
-      {/* banner da categoria */}
       <div className="h-[55vh] overflow-hidden">
         <div className="bg-black text-white flex items-center px-[15%] h-full relative">
-          <h1 className="text-7xl font-black max-w-[70%] text-right">
-            O universo da tecnologia em um só lugar
+          <h1 className="text-7xl font-black max-w-[70%] text-right capitalize">
+            {nomeDecodificado}
           </h1>
           <img
             src="/img_categoria/pessoa_categoria.png"
@@ -146,22 +137,14 @@ export default function CategoriaEspecifica() {
         </div>
       </div>
 
-      {/* conteudo principal */}
       <div className="px-40 py-6">
 
-          {/* barra de pesquisa padronizada */}
         <div className="flex justify-end mb-3">
-          <BarraPesquisa 
-            onSearch={handleBusca} 
-            placeholder="Procurar por..." 
-          />
+          <BarraPesquisa onSearch={handleBusca} placeholder="Procurar por..." />
         </div>
-        
 
-        {/* filtros de subcategoria e ordenação — alinhados à direita */}
         <div className="flex items-center justify-end mb-6 flex-wrap gap-3">
 
-          {/* subcategorias, so aparece se tiver subcategorias cadastradas */}
           {subcategorias.length > 0 && (
             <div className="flex gap-2 flex-wrap">
               {subcategorias.map((sub) => (
@@ -180,7 +163,6 @@ export default function CategoriaEspecifica() {
             </div>
           )}
 
-          {/* ordenação */}
           <select
             value={ordenacao}
             onChange={(e) => setOrdenacao(e.target.value)}
@@ -193,12 +175,10 @@ export default function CategoriaEspecifica() {
           </select>
         </div>
 
-        {/* estado de carregando */}
         {carregando && (
           <p className="text-center text-gray-500 mt-10">Carregando produtos...</p>
         )}
 
-        {/* grid de produtos */}
         {!carregando && produtosPaginados.length > 0 && (
           <div className="grid grid-cols-5 gap-3 mb-8">
             {produtosPaginados.map((produto) => (
@@ -207,14 +187,12 @@ export default function CategoriaEspecifica() {
           </div>
         )}
 
-        {/* mensagem quando nao tem produto */}
         {!carregando && produtosPaginados.length === 0 && (
           <p className="text-center text-gray-500 mt-10">
             Nenhum produto encontrado nessa categoria.
           </p>
         )}
 
-        {/* paginação (que so aparece se tiver mais de uma pagina */}
         {totalPaginas > 1 && (
           <div className="flex items-center justify-center gap-2 mb-10">
             <button
@@ -249,11 +227,9 @@ export default function CategoriaEspecifica() {
           </div>
         )}
 
-        {/* secoes exclusivas para usuarios logados */}
         {isLogged && (
           <div>
 
-            {/* principais lojas */}
             {lojas.length > 0 && (
               <section className="mt-10 mb-10 bg-black rounded-2xl px-8 py-6">
                 <h2 className="text-xl font-black text-white mb-4">Principais Lojas</h2>
@@ -262,7 +238,7 @@ export default function CategoriaEspecifica() {
                     <Link href={`/loja/${loja.id}`} key={loja.id}>
                       <div className="flex flex-col items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
                         <img
-                          src={loja.logoUrl || "https://placehold.co/64x64/e5e7eb/9ca3af?text=Loja"} //esse placeholder vai ocupar o espaço se n tiver logo
+                          src={loja.logoUrl || "https://placehold.co/64x64/e5e7eb/9ca3af?text=Loja"}
                           alt={loja.nome}
                           className="w-16 h-16 rounded-full object-cover bg-white"
                         />
@@ -277,7 +253,6 @@ export default function CategoriaEspecifica() {
               </section>
             )}
 
-            {/* mais populares */}
             {maisPopulares.length > 0 && (
               <section className="mt-10 mb-10">
                 <h2 className="text-xl font-black text-gray-800 mb-4">Mais populares</h2>
@@ -289,7 +264,6 @@ export default function CategoriaEspecifica() {
               </section>
             )}
 
-            {/* recem adicionados */}
             {recemAdicionados.length > 0 && (
               <section className="mt-10 mb-10">
                 <h2 className="text-xl font-black text-gray-800 mb-4">Recém adicionados</h2>

@@ -13,6 +13,7 @@ import {categMock, lojasMock, produtosMock} from '@/mock/mockData'
 import { Produto } from '@/interfaces/produtoCardInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { GridProdutos } from '@/components/gridProdutos';
+import { Categoria } from '@/interfaces/categoriaInteface';
 
 
 
@@ -22,6 +23,7 @@ export default function TelaFeed() {
   const [maisBaratos, setMaisBaratos] = useState<Produto[]>([]);
   const [recentes, setRecentes] = useState<Produto[]>([]);
   const [melhoresAvaliados, setMelhoresAvaliados] = useState<Produto[]>([]);
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
 
   const [lojas, setLojas] = useState<Loja[]>([]);
 
@@ -59,6 +61,7 @@ export default function TelaFeed() {
         setMelhoresAvaliados(produtosMock);
         setLojas(lojasMock);
         setCategorias(categMock);
+        setCategorias(categMock);
       }
     };
     buscarNoBack();
@@ -67,8 +70,6 @@ export default function TelaFeed() {
 
   //estado para guardar lojas
   const [lojasExibidas, setLojasExibidas] = useState(lojasMock);
-  //estado para guardar categorias
-  const [categorias, setCategorias] = useState(categMock);
 
   const [produtosExibidos, setProdutosExibidos] = useState(produtos);
 
