@@ -150,6 +150,9 @@ export async function criarAvaliacaoProduto(productId, nota, comentario) {
   const token = localStorage.getItem('token');
   const usuarioId = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
   const res = await api.post('/avaliacao_produto', { usuarioId, productId, nota, comentario });
+  return res.data;
+}
+
 //integração para as lojas
 export async function getLojasByUsuario(userId) {
   const res = await api.get(`/loja/usuario/${userId}`);
