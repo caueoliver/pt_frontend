@@ -4,5 +4,6 @@ export interface Produto {
   preco: number;
   idLoja: number;
   estoque: number;
+  avaliacao?: number;
   imagemUrl: string;
 }

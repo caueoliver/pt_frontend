@@ -27,19 +27,17 @@ export async function getUserById(userId) {
   const res = await api.get(`/user/${userId}`);
   return res.data;
 }
-//achar essa funcao no back
 export async function reviewsUser(userId) {
-  const res = await api.get(`/reviews/user/${userId}`);
+  const res = await api.get(`/avaliacao_produto/user/${userId}`);
   return res.data;
 }
 
 export async function updateProfile(userId, data) {
-  const res = await api.patch(`/user/${userId}`,data);
+  const res = await api.patch(`/user/update/${userId}`,data);
   return res.data;
 }
-
-export async function updatePassword(userId, data){
-  const res = await api.patch(`/user/${userId}/password`, data);
+export async function updatePassword(userId, data) {
+  const res = await api.patch(`/user/update/${userId}`, { password: data.newPassword });
   return res.data;
 }
 
@@ -175,5 +173,38 @@ export async function getLojas() {
 
 export async function getAvaliacoesProduto(productId) {
   const res = await api.get(`/avaliacaoproduto/produto/${productId}`);
+  return res.data;
+}
+
+export async function criarAvaliacaoProduto(productId, nota, comentario) {
+  const token = localStorage.getItem('token');
+  const usuarioId = token ? JSON.parse(atob(token.split('.')[1])).sub : null;
+  const res = await api.post('/avaliacao_produto', { usuarioId, productId, nota, comentario });
+  return res.data;
+}
+
+//integração para as lojas
+export async function getLojasByUsuario(userId) {
+  const res = await api.get(`/loja/usuario/${userId}`);
+  return res.data;
+}
+
+export async function createLoja(data) {
+  const res = await api.post('/loja', data);
+  return res.data;
+}
+
+export async function getProdutosByUsuario(userId) {
+  const res = await api.get(`/produto/usuario/${userId}`);
+  return res.data;
+}
+
+export async function createProduto(data) {
+  const res = await api.post('/produto', data);
+  return res.data;
+}
+
+export async function createImagensProduto(data) {
+  const res = await api.post('/imagens-produto', data);
   return res.data;
 }
