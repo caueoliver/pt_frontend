@@ -75,7 +75,7 @@ export default function Produto() {
         comment: av.comentario,   
         user: {
         name: av.usuario?.name || "Usuário",
-        avatarUrl: av.usuario?.profile_picture_url || "/img_logocjr/logo_cjr.png"  // ✅
+        avatarUrl: av.usuario?.profile_picture_url || "/img_logocjr/logo_cjr.png"  
         }
         })) || [];
         
@@ -101,10 +101,10 @@ export default function Produto() {
     <main className="min-h-screen bg-[#F6F3E4] pb-20">
       <div className="max-w-[1200px] mx-auto pt-10">
         
-        {/* Seção Superior: Galeria e Detalhes */}
+        {/* seção superior: galeria e detalhes */}
         <section className="flex gap-10">
           
-          {/* Lado Esquerdo: Galeria de Imagens */}
+          {/* lado esquerdo: galeria de imagens */}
           <div className="flex gap-6 w[60%]">
             
             <button onClick={() => window.history.back()} className="mt-4 h-fit cursor-pointer hover:opacity-70 transition">
