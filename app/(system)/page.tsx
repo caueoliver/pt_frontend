@@ -5,12 +5,12 @@ import { useState, useEffect } from 'react';
 import { CardProduto } from '@/components/cardProduto';
 import { Carrossel } from '@/components/carrossel';
 import { CardLoja} from '@/components/cardLoja';
-import { CardCategoria, Categoria } from '@/components/cardCategoria';
+import { CardCategoria} from '@/components/cardCategoria';
 import { FiltroLojas } from '@/components/filtroLoja';
 import { BarraPesquisa } from '@/components/barraPesquisa';
 import { getProdutosMaisBaratos, getProdutosRecentes, getProdutosMelhoresAvaliados, getAllProdutos, getAllLojas } from '@/api/api.js';
 import {categMock, lojasMock, produtosMock} from '@/mock/mockData'
-import { Produto } from '@/interfaces/produtoInterface';
+import { Produto } from '@/interfaces/produtoCardInterface';
 import { Loja } from '@/interfaces/lojaInterface';
 import { GridProdutos } from '@/components/gridProdutos';
 
@@ -30,19 +30,23 @@ export default function TelaFeed() {
 
 // puxa os produtos pela função da api
   useEffect(() => {
-    const buscarProdutos = async () =>{
+    const buscarNoBack = async () =>{
       try{
-        const [todosDb, baratosDb, recentesDb, melhoresDb] = await Promise.all([
+        const [todosDb, baratosDb, recentesDb, melhoresDb, lojasDb] = await Promise.all([
           getAllProdutos(),
           getProdutosMaisBaratos(),
           getProdutosRecentes(),
-          getProdutosMelhoresAvaliados() 
+          getProdutosMelhoresAvaliados(),
+          getAllLojas(),
         ]);
 
         setProdutos(todosDb);
+        setProdutosExibidos(todosDb);
         setMaisBaratos(baratosDb);
         setRecentes(recentesDb);
         setMelhoresAvaliados(melhoresDb);
+        setLojas(lojasDb);
+        setLojasExibidas(lojasDb)
 
       }catch(error){
         console.error("Erro ao conectar com o back:",error);
@@ -50,26 +54,12 @@ export default function TelaFeed() {
         setMaisBaratos(produtosMock);
         setRecentes(produtosMock);
         setMelhoresAvaliados(produtosMock);
-      }
-    };
-    buscarProdutos();
-  }, []);
-
-  useEffect(() => {
-    const buscarLojas = async () =>{
-      try{
-        const[todasDb] = await Promise.all([
-          getAllLojas(),
-        ]);
-
-        setLojas(todasDb);
-      }catch(error){
-        console.error("Erro", error);
         setLojas(lojasMock);
       }
     };
-    buscarLojas
+    buscarNoBack();
   }, []);
+
 
   //estado para guardar lojas
   const [lojasExibidas, setLojasExibidas] = useState(lojasMock);
@@ -88,7 +78,7 @@ const busca = (termo: string) => {
     const termoMin = termo.toLowerCase();
 
     //array que contem todas as lojas compatíveis com o que está sendo digitado
-    const lojasFiltradas = lojasExibidas.filter(loja =>
+    const lojasFiltradas = lojas.filter(loja =>
       loja.nome.toLowerCase().includes(termoMin)
     );
     setLojasExibidas(lojasFiltradas);
@@ -106,12 +96,15 @@ const busca = (termo: string) => {
   const aplicarFiltroDeLojas = (categoriasMarcadas: string[]) => {
     // se o usuário desmarcou tudo, exibe todas as lojas de novo
     if (categoriasMarcadas.length === 0) {
-      setLojasExibidas(lojasMock);
+      setLojasExibidas(lojas);
     } else {
+      const marcadasMinusculo = categoriasMarcadas.map(c => c.toLowerCase());
       // o .filter só deixa passar a loja se a categoria dela estiver dentro da lista de marcadas
-      const lojasFiltradas = lojasMock.filter((loja) => 
-        categoriasMarcadas.includes(loja.categoria)
-      );
+      const lojasFiltradas = lojas.filter((loja) => {
+        // garante que a loja tem categoria antes de converter
+        const categoriaDaLoja = loja.categoria ? loja.categoria.toLowerCase() : "";
+        return marcadasMinusculo.includes(categoriaDaLoja);
+      });
       setLojasExibidas(lojasFiltradas);
     }
   }

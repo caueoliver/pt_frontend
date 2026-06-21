@@ -1,5 +1,5 @@
 'use client';
-import { Produto } from '@/interfaces/produtoInterface';
+import { Produto } from '@/interfaces/produtoCardInterface';
 import Link from 'next/link';
 
 
