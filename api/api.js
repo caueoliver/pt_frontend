@@ -48,6 +48,12 @@ export async function deleteUser(userId){
   return res.data;
 }
 
+// todas as categorias
+export async function getAllCategorias() {
+  const res = await api.get('/categorias');
+  return res.data;
+}
+
 //produtos mais baratos gerais
 export async function getProdutosMaisBaratos() {
   const res = await api.get('/produto/mais-baratos');
@@ -131,6 +137,30 @@ export async function getProdutosMelhoresByLoja(lojaId){
 export async function getProdutosByLoja(lojaId){
   const res = await api.get(`/loja/${lojaId}/produtos`);
   return res.data;
+}
+
+// atualizar dados da loja
+export async function updateLoja(id, data) {
+  const res = await api.put(`/loja/${id}`, data);
+  return res.data;
+}
+
+// deletar loja
+export async function deleteLoja(id) {
+  const res = await api.delete(`/loja/delete/${id}`);
+  return res.data;
+}
+
+export async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await api.post('/loja/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return res.data; // retorna { url: 'http://localhost:3001/uploads/...' }
 }
 
 export async function getProdutos() {

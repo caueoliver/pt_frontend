@@ -1,7 +1,7 @@
 
 import {  Produto } from '@/interfaces/produtoCardInterface';
 import { Loja } from '@/interfaces/lojaInterface';
-import { Categoria } from '@/components/cardCategoria';
+import { Categoria } from '@/interfaces/categoriaInteface';
 import { Review } from '@/interfaces/reviewInterface';
 
 
