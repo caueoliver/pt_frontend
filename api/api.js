@@ -52,6 +52,14 @@ export async function getAllCategorias() {
   return res.data;
 }
 
+// produto by id
+export async function getProdutoById(id) {
+  console.log("Chamando URL:", `/produto/${id}`); 
+  const res = await api.get(`/produto/${id}`);
+  return res.data;
+}
+
+
 //produtos mais baratos gerais
 export async function getProdutosMaisBaratos() {
   const res = await api.get('/produto/mais-baratos');
@@ -172,7 +180,7 @@ export async function getLojas() {
 }
 
 export async function getAvaliacoesProduto(productId) {
-  const res = await api.get(`/avaliacaoproduto/produto/${productId}`);
+  const res = await api.get(`/avaliacao_produto/produto/${productId}`); // com underscore
   return res.data;
 }
 

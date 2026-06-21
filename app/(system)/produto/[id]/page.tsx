@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { getAvaliacoesProduto } from "@/api/api.js"; 
+import { getAvaliacoesProduto, getProdutoById } from "@/api/api.js"; 
 
 // tipos 
 interface ProductImage {
@@ -45,51 +45,45 @@ export default function Produto() {
   useEffect(() => {
     setLoading(true);
     
-    // Usando uma função async dentro do useEffect para podermos chamar a API
     async function loadPageData() {
-      // mock do produto 
-      const mockProduct: Product = {
-        id: productId || "1",
-        title: "Brownie Meio Amargo",
-        price: 4.70,
-        description: "BROWNIE MEIO AMARGO 80g\n\nRecheado com uma ganache de chocolate meio amargo bem cremosa...",
-        rating: 4.5,
-        reviewsCount: 15,
-        category: "mercado",
-        availableQuantity: 3,
-        images: [
-          { id: "mock1", url: "/img_produtos/brownie_frente.png" },
-          { id: "mock2", url: "/img_produtos/brownie_mini.jpg" },
-          { id: "mock3", url: "/img_produtos/brownie.png" },
-          { id: "mock4", url: "/img_produtos/brownie_tabela.jpg" },
-        ]
-      };
-
-      setProduct(mockProduct);
-      if (mockProduct.images.length > 0) setSelectedImage(mockProduct.images[0]);
-
-     //avaliacao real do crud 
       try {
-        const avaliacoesReais = await getAvaliacoesProduto(productId);
+        //busca produto
+        const produto = await getProdutoById(productId);
         
-        if (avaliacoesReais && avaliacoesReais.length > 0) {
-          // Formatando os dados do jeito que o Front-end precisa
-          const avaliacoesFormatadas = avaliacoesReais.map((av: any) => ({
-            id: av.id,
-            comment: av.comment,
-            rating: av.rating,
-            user: {
-              name: av.usuario?.name || "Usuário",
-              avatarUrl: av.usuario?.avatarUrl || "/img_logocjr/logo_cjr.png" // Foto padrão se o usuário não tiver
-            }
-          }));
-          setReviews(avaliacoesFormatadas);
-        } else {
-          setReviews([]); // Nenhuma avaliação no banco ainda
+        // busca avaliaçoes
+        const avaliacoes = await getAvaliacoesProduto(productId);
+
+        // Mapeia o produto do banco para o formato do seu front
+        const productFormatado: Product = {
+          id: String(produto.id),
+          title: produto.name,
+          price: produto.preco,
+          description: produto.description,
+          rating: produto.avaliacao || 4.5,
+          reviewsCount: avaliacoes?.length || 0,
+          category: produto.categoria?.name || "Geral",
+          availableQuantity: produto.estoque,
+          images: [{ id: "1", url: produto.imagemUrl || "/img_produtos/brownie.png" }]
+        };
+
+        setProduct(productFormatado);
+        if (productFormatado.images.length > 0) setSelectedImage(productFormatado.images[0]);
+
+        // formata avaliações
+        const avaliacoesFormatadas = avaliacoes?.map((av: any) => ({
+        id: av.id,
+        comment: av.comentario,   
+        user: {
+        name: av.usuario?.name || "Usuário",
+        avatarUrl: av.usuario?.profile_picture_url || "/img_logocjr/logo_cjr.png"  // ✅
         }
+        })) || [];
+        
+        setReviews(avaliacoesFormatadas);
+
       } catch (error) {
-        console.error("Erro ao buscar avaliações do banco:", error);
-        setReviews([]); // Deixa vazio caso dê erro (como aquele 401 Unauthorized)
+        console.error("Erro ao buscar dados do banco:", error);
+        alert("Não foi possível carregar os dados reais, usando mock.");
       } finally {
         setLoading(false);
       }
@@ -98,7 +92,6 @@ export default function Produto() {
     if (productId) {
       loadPageData();
     }
-    
   }, [productId]);
 
   if (loading) return <div className="h-screen flex items-center justify-center text-2xl">Carregando produto...</div>;
