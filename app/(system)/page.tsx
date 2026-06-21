@@ -8,7 +8,7 @@ import { CardLoja} from '@/components/cardLoja';
 import { CardCategoria} from '@/components/cardCategoria';
 import { FiltroLojas } from '@/components/filtroLoja';
 import { BarraPesquisa } from '@/components/barraPesquisa';
-import { getProdutosMaisBaratos, getProdutosRecentes, getProdutosMelhoresAvaliados, getAllProdutos, getAllLojas } from '@/api/api.js';
+import { getProdutosMaisBaratos, getProdutosRecentes, getProdutosMelhoresAvaliados, getAllProdutos, getAllLojas, getAllCategorias } from '@/api/api.js';
 import {categMock, lojasMock, produtosMock} from '@/mock/mockData'
 import { Produto } from '@/interfaces/produtoCardInterface';
 import { Loja } from '@/interfaces/lojaInterface';
@@ -32,12 +32,14 @@ export default function TelaFeed() {
   useEffect(() => {
     const buscarNoBack = async () =>{
       try{
-        const [todosDb, baratosDb, recentesDb, melhoresDb, lojasDb] = await Promise.all([
+        const [todosDb, baratosDb, recentesDb, melhoresDb, lojasDb, categoriasDb] = await Promise.all([
           getAllProdutos(),
           getProdutosMaisBaratos(),
           getProdutosRecentes(),
           getProdutosMelhoresAvaliados(),
           getAllLojas(),
+          getAllCategorias(),
+        
         ]);
 
         setProdutos(todosDb);
@@ -46,7 +48,8 @@ export default function TelaFeed() {
         setRecentes(recentesDb);
         setMelhoresAvaliados(melhoresDb);
         setLojas(lojasDb);
-        setLojasExibidas(lojasDb)
+        setLojasExibidas(lojasDb);
+        setCategorias(categoriasDb);
 
       }catch(error){
         console.error("Erro ao conectar com o back:",error);
@@ -55,6 +58,7 @@ export default function TelaFeed() {
         setRecentes(produtosMock);
         setMelhoresAvaliados(produtosMock);
         setLojas(lojasMock);
+        setCategorias(categMock);
       }
     };
     buscarNoBack();

@@ -76,6 +76,12 @@ export async function getAllLojas(){
   return res.data;
 }
 
+// todas as categorias
+export async function getAllCategorias() {
+  const res = await api.get('/categorias');
+  return res.data;
+}
+
 export async function getAvaliacoesLoja() {
   const res = await api.get('avaliacoes-loja');
   return res.data;
