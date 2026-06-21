@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { FiCamera, FiChevronDown } from 'react-icons/fi';
+import { createProduto, createImagensProduto } from '@/api/api.js';
 
 type Categoria = {
   id: number;
@@ -23,6 +24,7 @@ export function ModalCriarProduto({ lojaId, onClose, onCriado }: Props) {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [imagens, setImagens] = useState<(File | null)[]>([null, null, null]);
   const [previews, setPreviews] = useState<(string | null)[]>([null, null, null]);
+  const [loading, setLoading] = useState(false);
 
   const inputRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
 
@@ -42,6 +44,47 @@ export function ModalCriarProduto({ lojaId, onClose, onCriado }: Props) {
     const novasPreviews = [...previews];
     novasPreviews[index] = url;
     setPreviews(novasPreviews);
+  };
+
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  const handleAdicionar = async () => {
+    if (!nome.trim() || !categoriaId || !preco) return;
+    try {
+      setLoading(true);
+      const produto = await createProduto({
+        lojaId,
+        categoriaId: Number(categoriaId),
+        name: nome,
+        description: descricao || undefined,
+        preco: Number(preco),
+        estoque: quantidade,
+      });
+
+      const arquivos = imagens.filter(Boolean) as File[];
+      if (arquivos.length > 0) {
+        const imagensConvertidas = await Promise.all(
+          arquivos.map(async (file, i) => ({
+            imageUrl: await fileToBase64(file),
+            ordem: i + 1,
+          }))
+        );
+        await createImagensProduto({ produtoId: produto.id, imagens: imagensConvertidas });
+      }
+
+      onCriado?.(produto);
+      onClose();
+    } catch (err) {
+      console.error('Erro ao criar produto:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -161,9 +204,11 @@ export function ModalCriarProduto({ lojaId, onClose, onCriado }: Props) {
 
         {/* botão */}
         <button
-          className="w-full bg-[#6A38F3] hover:bg-[#5a2ee0] text-white font-bold text-base rounded-full py-3 transition-colors"
+          onClick={handleAdicionar}
+          disabled={loading || !nome.trim() || !categoriaId || !preco}
+          className="w-full bg-[#6A38F3] hover:bg-[#5a2ee0] text-white font-bold text-base rounded-full py-3 transition-colors disabled:opacity-50"
         >
-          Adicionar
+          {loading ? 'Adicionando...' : 'Adicionar'}
         </button>
 
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { getAvaliacoesProduto, getProdutoById } from "@/api/api.js"; 
 
@@ -35,12 +35,18 @@ interface Product {
 
 export default function Produto() {
   const params = useParams();
+  const router = useRouter();
   const productId = params.id as string;
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [produtoReal, setProdutoReal] = useState<any>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedImage, setSelectedImage] = useState<ProductImage | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isLogged, setIsLogged] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
+  const [modalEditarOpen, setModalEditarOpen] = useState(false);
+  const [modalAvaliarOpen, setModalAvaliarOpen] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -140,8 +146,28 @@ export default function Produto() {
 
           {/* Lado Direito: Informações do Produto */}
           <div className="w-1/2 flex flex-col pt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <h1 className="text-5xl font-medium text-black">{product.title}</h1>
+              <div className="flex gap-2 ml-2">
+                {isLogged && isOwner && (
+                  <button
+                    onClick={() => setModalEditarOpen(true)}
+                    className="w-9 h-9 bg-[#6A38F3] hover:bg-[#5a2ee0] rounded-full flex items-center justify-center transition-colors"
+                    title="Editar produto"
+                  >
+                    <FiEdit2 size={16} className="text-white" />
+                  </button>
+                )}
+                {isLogged && !isOwner && (
+                  <button
+                    onClick={() => setModalAvaliarOpen(true)}
+                    className="w-9 h-9 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors"
+                    title="Avaliar produto"
+                  >
+                    <FiStar size={16} className="text-white" />
+                  </button>
+                )}
+              </div>
             </div>
             
             <div className="flex items-center gap-2 mt-4 text-sm text-gray-600">
@@ -197,6 +223,40 @@ export default function Produto() {
         </section>
 
       </div>
+
+      {modalEditarOpen && produtoReal && (
+        <ModalEditarProduto
+          produto={{
+            id: produtoReal.id,
+            name: produtoReal.name,
+            categoriaId: produtoReal.categoriaId,
+            description: produtoReal.description,
+            preco: produtoReal.preco,
+            estoque: produtoReal.estoque,
+            imagens: produtoReal.imagensProdutos,
+          }}
+          onClose={() => setModalEditarOpen(false)}
+          onSalvo={() => setModalEditarOpen(false)}
+          onDeletado={async () => {
+            try {
+              await deleteProduto(produtoReal.id);
+              router.back();
+            } catch (err) {
+              console.error('Erro ao deletar produto:', err);
+            }
+          }}
+        />
+      )}
+
+      {modalAvaliarOpen && (
+        <ModalCriarAvaliacao
+          produtoId={Number(productId)}
+          nomeProduto={product.title}
+          onClose={() => setModalAvaliarOpen(false)}
+          onCriado={() => setModalAvaliarOpen(false)}
+        />
+      )}
+
     </main>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { FiCamera, FiChevronDown } from 'react-icons/fi';
+import { updateProduto } from '@/api/api.js';
 
 type Categoria = {
   id: number;
@@ -37,6 +38,7 @@ export function ModalEditarProduto({ produto, onClose, onSalvo, onDeletado }: Pr
     produto.imagens?.[1]?.imageUrl ?? null,
     produto.imagens?.[2]?.imageUrl ?? null,
   ]);
+  const [loading, setLoading] = useState(false);
 
   const inputRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
 
@@ -53,6 +55,26 @@ export function ModalEditarProduto({ produto, onClose, onSalvo, onDeletado }: Pr
     const novas = [...previews];
     novas[index] = url;
     setPreviews(novas);
+  };
+
+  const handleSalvar = async () => {
+    if (!nome.trim() || !preco) return;
+    try {
+      setLoading(true);
+      const result = await updateProduto(produto.id, {
+        name: nome,
+        categoriaId: Number(categoriaId),
+        description: descricao || undefined,
+        preco: Number(preco),
+        estoque: quantidade,
+      });
+      onSalvo?.(result);
+      onClose();
+    } catch (err) {
+      console.error('Erro ao salvar produto:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -179,9 +201,11 @@ export function ModalEditarProduto({ produto, onClose, onSalvo, onDeletado }: Pr
 
         {/* salvar */}
         <button
-          className="w-full bg-[#6A38F3] hover:bg-[#5a2ee0] text-white font-bold text-base rounded-full py-3 transition-colors"
+          onClick={handleSalvar}
+          disabled={loading || !nome.trim() || !preco}
+          className="w-full bg-[#6A38F3] hover:bg-[#5a2ee0] text-white font-bold text-base rounded-full py-3 transition-colors disabled:opacity-50"
         >
-          Salvar
+          {loading ? 'Salvando...' : 'Salvar'}
         </button>
 
       </div>

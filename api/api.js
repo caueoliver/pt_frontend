@@ -123,6 +123,11 @@ export async function deletarComentario(id) {
 }
 
 //loja pelo id
+export async function getProdutoById(produtoId) {
+  const res = await api.get(`produto/${produtoId}`);
+  return res.data;
+}
+
 export async function getLojaById(lojaId){
   const res = await api.get(`loja/${lojaId}`)
   return res.data;
@@ -219,5 +224,15 @@ export async function createProduto(data) {
 
 export async function createImagensProduto(data) {
   const res = await api.post('/imagens-produto', data);
+  return res.data;
+}
+
+export async function updateProduto(id, data) {
+  const res = await api.put(`/produto/${id}`, data);
+  return res.data;
+}
+
+export async function deleteProduto(id) {
+  const res = await api.delete(`/produto/${id}`);
   return res.data;
 }
