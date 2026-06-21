@@ -8,7 +8,7 @@ export const fakeUser = {
 export const fakeReviews = [
   {
     id: 1,
-    comment: "Muito bom esse filme.",
+    comentario: "Muito bom esse filme.",
     user: {
       name: "Luis",
       avatarUrl: "https://i.pravatar.cc/300",
@@ -17,7 +17,7 @@ export const fakeReviews = [
 
   {
     id: 1,
-    comment: "Gostei bastante da fotografia.",
+    comentario: "Gostei bastante da fotografia.",
     user: {
       name: "Luis",
       avatarUrl: "https://i.pravatar.cc/300",
