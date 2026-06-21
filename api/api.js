@@ -141,6 +141,11 @@ export async function getLojas() {
   return res.data;
 }
 
+export async function getCategorias() {
+  const res = await api.get('categorias');
+  return res.data;
+}
+
 export async function getAvaliacoesProduto(productId) {
   const res = await api.get(`/avaliacaoproduto/produto/${productId}`);
   return res.data;
