@@ -262,10 +262,10 @@ export default function TelaLoja() {
            
       </div>
       
-            <ModalEditarLoja 
-        isOpen={isModalEditOpen} 
-        onClose={() => setIsModalEditOpen(false)} 
-        loja={loja} 
+            <ModalEditarLoja
+        isOpen={isModalEditOpen}
+        onClose={() => setIsModalEditOpen(false)}
+        loja={loja}
       />
       
       

@@ -21,7 +21,7 @@ type Avaliacao = {
   comentario?: string;
   usuario: { nome: string; profile_picture_url?: string | null };
   loja?: { nome: string };
-  comentariosAvaliacoesLojaLoja: Comentario[];
+  comentariosAvaliacoesLoja: Comentario[];
 };
 
 export default function PaginaAvaliacao() {
