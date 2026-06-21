@@ -8,6 +8,7 @@ export function NavBar(){
     //isLogged: variável para verficar se o usuário está logado
     //setIsLogged: função para alterar o valor de isLogged
     const [isLogged, setIsLogged] = useState(false);
+    const [userId, setUserId] = useState(null);
 
 
     //variável para rastrear a url atual
@@ -15,14 +16,21 @@ export function NavBar(){
 
 
     useEffect(() => {
-        //variável que busca o token no local storage
-        const token = localStorage.getItem('token')
-    
-        //caso um token seja encontrado
-        if (token){
-            setIsLogged(true); //seta o isLogged como verdadeiro
-        }
-    })
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      setIsLogged(true);
+      
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        
+        // pega o id do token
+        setUserId(payload.sub || payload.id); 
+      } catch (error) {
+        console.error("Erro ao ler o token:", error);
+      }
+    }
+  }, []);
 
 
     //função para fazer o logout
@@ -98,7 +106,7 @@ export function NavBar(){
 
                     ):(
                         // se não estiver aparece assim
-                    <Link href="/login" >
+                    <Link href={userId ? `/perfil/${userId}` : '/login'} >
                         <button className="group relative w-8 h-8 active:scale-90 transition-transform">
                 
                             <img 
