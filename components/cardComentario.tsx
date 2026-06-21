@@ -38,9 +38,11 @@ export function CardComentario({ review }: { review: Review }) {
 
         {/* link interno do card */}
         <div className="flex justify-end mt-4">
-          <button className="text-[#9b72ff] hover:text-[#6A38F3] text-sm font-light transition-colors">
+          <Link href={`/avaliacao/${review.id}`} className="flex gap-4 hover:opacity-80 transition-opacity">
+           <button className="text-[#9b72ff] hover:text-[#6A38F3] text-sm font-light transition-colors">
             ver mais
           </button>
+          </Link>
         </div>
       </div>
 
